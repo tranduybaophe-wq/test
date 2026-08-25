@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyện đề - Primux THPT</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { "primary-deep": "#1e3a8a", "primary-main": "#2563eb", "primary-light": "#60a5fa" }, fontFamily: { sans: ["Be Vietnam Pro", "sans-serif"] } } } }
+    </script>
+    <style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; background-color: #f8fbff; }
+        .card-shadow { box-shadow: 0 10px 30px -5px rgba(30, 64, 175, 0.06); }
+        .popup-backdrop { opacity: 0; pointer-events: none; transition: opacity 0.35s ease; }
+        .popup-backdrop.active { opacity: 1; pointer-events: auto; }
+        .popup-box { transform: scale(0.85); transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .popup-backdrop.active .popup-box { transform: scale(1); }
+        .page-transition-overlay { position: fixed; inset: 0; background-color: #1e3a8a; z-index: 9999; pointer-events: none; opacity: 1; transition: opacity 0.35s ease; }
+        .page-transition-overlay.hidden-overlay { opacity: 0; }
+        
+        /* Chế độ làm bài từng câu */
+        .q-palette-btn.active { background-color: #2563eb !important; color: white !important; font-weight: 800; }
+        .q-palette-btn.answered { border-color: #10b981 !important; background-color: #ecfdf5 !important; color: #065f46 !important; }
+        .correct-answer { background-color: #d1fae5 !important; border-color: #10b981 !important; color: #065f46 !important; }
+        .wrong-answer { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+    </style>
+</head>
+<body class="bg-[#f4f8ff] text-slate-900 min-h-screen flex flex-col md:flex-row antialiased">
+    <div id="pageOverlay" class="page-transition-overlay"></div>
+
+    <aside class="w-full md:w-72 bg-white border-r border-blue-100 flex flex-col justify-between shrink-0 card-shadow z-20">
+        <div>
+            <div class="p-6 border-b border-blue-50 flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black text-lg shadow-md">P</div>
+                <div><span class="text-xl font-black text-blue-950 block">PRIMUX</span><span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest block">THPT Quốc Gia · 2027</span></div>
+            </div>
+            <nav class="p-4 space-y-1.5">
+                <a href="index.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <span class="material-symbols-outlined text-[20px]">grid_view</span> <span class="text-sm">Tổng quan</span>
+                </a>
+                <a href="exam.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl bg-blue-600 text-white font-bold shadow-md transition-all">
+                    <span class="material-symbols-outlined text-[20px] text-amber-300">menu_book</span> <span class="text-sm">Luyện đề</span>
+                </a>
+                <a href="history.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <span class="material-symbols-outlined text-[20px]">history</span> <span class="text-sm">Lịch sử làm bài</span>
+                </a>
+            </nav>
+        </div>
+        <div class="p-4">
+            <a href="admin-login.html" class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border text-xs font-bold text-slate-600 hover:text-blue-900">
+                <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span> Cổng Quản Trị Admin
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        <header class="h-20 bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-blue-100 px-8 flex items-center justify-between">
+            <div><span class="text-xs font-extrabold text-blue-600 uppercase tracking-widest">PHÒNG THI ONLINE</span><h1 class="text-2xl font-black text-blue-950">Kho Đề Thi Chuẩn</h1></div>
+        </header>
+        <div class="p-6 md:p-8 space-y-8 max-w-7xl w-full mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="examsGridContainer"></div>
+        </div>
+    </main>
+
+    <!-- POPUP PHÒNG THI (CÓ CHUYỂN CÂU HỎI & QUESTION PALETTE) -->
+    <div id="liveExamModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md popup-backdrop">
+        <div class="bg-white rounded-3xl w-full max-w-4xl max-h-[92vh] flex flex-col shadow-2xl border border-blue-100 relative popup-box overflow-hidden">
+            <!-- Header -->
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-blue-50/50">
+                <div>
+                    <h3 id="examLiveTitle" class="text-base md:text-lg font-black text-blue-950">Đề Thi THPT Quốc Gia</h3>
+                    <div class="text-xs text-slate-500 font-medium">Câu đang làm: <b id="currentQuestionIndicator" class="text-blue-600">1 / 50</b></div>
+                </div>
+                <div class="text-right">
+                    <div class="text-[10px] font-bold text-slate-400 uppercase">THỜI GIAN</div>
+                    <div class="text-xl md:text-2xl font-black text-amber-600 font-mono" id="examTimer">90:00</div>
+                </div>
+            </div>
+
+            <!-- Bảng chuyển nhanh câu hỏi (Question Palette) -->
+            <div class="p-4 border-b border-slate-100 bg-slate-50 flex items-center gap-2 overflow-x-auto" id="questionPaletteContainer">
+                <!-- Nút số câu 1, 2, 3... -->
+            </div>
+            
+            <!-- Vùng hiển thị câu hỏi hiện tại -->
+            <div class="p-6 md:p-8 overflow-y-auto flex-1 text-xs" id="singleQuestionDisplayArea">
+                <!-- Nội dung câu hỏi duy nhất đang chọn -->
+            </div>
+            
+            <!-- Footer Điều hướng chuyển câu & Nộp bài -->
+            <div class="p-4 md:p-5 border-t border-slate-100 flex justify-between items-center bg-slate-50" id="examFooterControls">
+                <div class="flex gap-2">
+                    <button onclick="prevQuestion()" id="btnPrevQ" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 font-bold text-slate-700 transition flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">arrow_back</span> Câu trước
+                    </button>
+                    <button onclick="nextQuestion()" id="btnNextQ" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 font-bold text-white transition flex items-center gap-1">
+                        Câu tiếp theo <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                    </button>
+                </div>
+                <button onclick="submitExamPaper()" class="px-6 py-2.5 rounded-xl font-black text-white bg-emerald-600 hover:bg-emerald-700 shadow-md active:scale-95 transition">Nộp bài thi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP KẾT QUẢ -->
+    <div id="resultModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm popup-backdrop">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-8 text-center shadow-2xl relative popup-box">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4 border border-emerald-100"><span class="material-symbols-outlined text-4xl">emoji_events</span></div>
+            <h3 class="text-2xl font-black text-blue-950 mb-1">Kết Quả Bài Thi</h3>
+            <div class="text-4xl font-black text-amber-500 my-4" id="resultScore">8.5/10</div>
+            <p class="text-xs text-slate-500 mb-6 font-medium">Số câu đúng: <b id="resultCorrectCount" class="text-emerald-600">42/50</b></p>
+            <div class="space-y-3">
+                <button onclick="reviewExplanations()" class="w-full py-3 px-4 rounded-xl font-black text-xs text-white bg-blue-600 hover:bg-blue-700 shadow-md">Xem lời giải thích</button>
+                <button onclick="closeModal('resultModal'); closeModal('liveExamModal');" class="w-full py-2.5 px-4 rounded-xl font-bold text-xs text-slate-500 hover:bg-slate-100">Đóng phòng thi</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('pageOverlay')?.classList.add('hidden-overlay');
+            loadPublishedExams();
+        });
+
+        function openModal(id) { document.getElementById(id)?.classList.add('active'); }
+        function closeModal(id) { document.getElementById(id)?.classList.remove('active'); }
+
+        let currentExamSession = null;
+        let allQuestions = [];
+        let currentQuestionIndex = 0;
+        let studentAnswers = {};
+
+        function loadPublishedExams() {
+            const container = document.getElementById('examsGridContainer');
+            const published = JSON.parse(localStorage.getItem('primux_published_exams') || '[]');
+            
+            // Dữ liệu mẫu ban đầu nếu Admin chưa đăng
+            if (published.length === 0) {
+                const sampleExam = {
+                    id: 'sample_1', title: 'Đề Thi Thử Tốt Nghiệp THPT 2027 (50 Câu Chuẩn)',
+                    subject: 'Toán Học', time: '90', qCount: '50 câu',
+                    data: {
+                        part1_abcd: Array.from({length: 50}, (_, i) => ({
+                            number: i + 1, content: `Câu hỏi số ${i + 1}: Cho hàm số và tọa độ không gian Oxyz thỏa mãn phương trình đạo hàm f'(x). Kết quả là:`,
+                            type: 'ABCD', options: [{key:'A', text:`Phương án A cho câu ${i+1}`}, {key:'B', text:`Phương án B cho câu ${i+1}`}, {key:'C', text:`Phương án C cho câu ${i+1}`}, {key:'D', text:`Phương án D cho câu ${i+1}`}],
+                            answer: ['A','B','C','D'][i % 4], explanation: `Lời giải chi tiết câu ${i + 1}: Áp dụng công thức đạo hàm và tính chất tích phân cơ bản.`
+                        }))
+                    }
+                };
+                published.push(sampleExam);
+                localStorage.setItem('primux_published_exams', JSON.stringify(published));
+            }
+
+            container.innerHTML = '';
+            published.forEach(exam => {
+                container.innerHTML += `
+                    <div class="bg-white p-6 rounded-3xl border border-blue-100 card-shadow flex flex-col justify-between hover:-translate-y-1 transition-all">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-700 font-extrabold text-xs">${exam.subject}</span>
+                                <span class="text-xs font-bold text-slate-500">${exam.qCount} · ${exam.time} phút</span>
+                            </div>
+                            <h3 class="text-lg font-black text-blue-950 mb-2">${exam.title}</h3>
+                            <p class="text-xs text-slate-600 line-clamp-2 mb-4">Hỗ trợ chuyển nhanh từng câu hỏi và xem giải thích chi tiết.</p>
+                        </div>
+                        <button onclick="openExamSession('${exam.id}')" class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md">Bắt đầu làm bài</button>
+                    </div>
+                `;
+            });
+        }
+
+        function openExamSession(examId) {
+            const published = JSON.parse(localStorage.getItem('primux_published_exams') || '[]');
+            currentExamSession = published.find(e => e.id === examId);
+            
+            // Gộp tất cả câu hỏi thành 1 mảng
+            allQuestions = [];
+            if (currentExamSession.data.part1_abcd) allQuestions.push(...currentExamSession.data.part1_abcd);
+            if (currentExamSession.data.part2_trueFalse) allQuestions.push(...currentExamSession.data.part2_trueFalse);
+            if (currentExamSession.data.part3_shortAnswer) allQuestions.push(...currentExamSession.data.part3_shortAnswer);
+
+            currentQuestionIndex = 0;
+            studentAnswers = {};
+            document.getElementById('examLiveTitle').innerText = currentExamSession.title;
+
+            renderQuestionPalette();
+            renderSingleQuestion(0);
+            openModal('liveExamModal');
+        }
+
+        // Render thanh phân trang các nút câu hỏi (Question Palette)
+        function renderQuestionPalette() {
+            const palette = document.getElementById('questionPaletteContainer');
+            palette.innerHTML = '';
+            allQuestions.forEach((q, idx) => {
+                const isAnswered = studentAnswers[idx] !== undefined;
+                const isActive = idx === currentQuestionIndex;
+                palette.innerHTML += `
+                    <button onclick="jumpToQuestion(${idx})" id="palette_btn_${idx}" class="q-palette-btn shrink-0 w-8 h-8 rounded-xl border text-xs font-bold transition ${isActive ? 'active' : ''} ${isAnswered ? 'answered' : 'border-slate-200 bg-white text-slate-700'}">
+                        ${idx + 1}
+                    </button>
+                `;
+            });
+        }
+
+        // Render một câu hỏi duy nhất lên màn hình
+        function renderSingleQuestion(index) {
+            currentQuestionIndex = index;
+            const q = allQuestions[index];
+            document.getElementById('currentQuestionIndicator').innerText = `${index + 1} / ${allQuestions.length}`;
+
+            // Cập nhật trạng thái nút palette
+            document.querySelectorAll('.q-palette-btn').forEach((btn, idx) => {
+                btn.classList.toggle('active', idx === index);
+            });
+
+            // Cập nhật trạng thái nút Next/Prev
+            document.getElementById('btnPrevQ').disabled = index === 0;
+            document.getElementById('btnNextQ').disabled = index === allQuestions.length - 1;
+
+            const area = document.getElementById('singleQuestionDisplayArea');
+            area.innerHTML = `
+                <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex items-center gap-2">
+                        <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-[11px] font-black uppercase">Câu ${index + 1}</span>
+                        <span class="text-xs text-slate-400 font-bold uppercase">${q.type}</span>
+                    </div>
+                    <div class="text-sm md:text-base font-bold text-blue-950 leading-relaxed">${q.content}</div>
+
+                    <!-- Lựa chọn đáp án ABCD -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                        ${(q.options || []).map(opt => `
+                            <label id="opt_label_${index}_${opt.key}" class="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 hover:bg-blue-50 cursor-pointer transition">
+                                <input type="radio" name="student_choice_${index}" value="${opt.key}" ${studentAnswers[index] === opt.key ? 'checked' : ''} onchange="recordAnswer(${index}, '${opt.key}')" class="w-4 h-4 text-blue-600"/>
+                                <span class="font-medium text-xs md:text-sm"><b>${opt.key}.</b> ${opt.text}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+
+                    <!-- Khung lời giải chi tiết (Ẩn mặc định) -->
+                    <div id="singleExpBox_${index}" class="hidden p-4 rounded-2xl bg-blue-50 border border-blue-100 text-blue-900 text-xs leading-relaxed mt-4"></div>
+                </div>
+            `;
+        }
+
+        function recordAnswer(qIndex, answerKey) {
+            studentAnswers[qIndex] = answerKey;
+            const btn = document.getElementById(`palette_btn_${qIndex}`);
+            if (btn) btn.classList.add('answered');
+        }
+
+        function jumpToQuestion(index) {
+            renderSingleQuestion(index);
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < allQuestions.length - 1) {
+                renderSingleQuestion(currentQuestionIndex + 1);
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                renderSingleQuestion(currentQuestionIndex - 1);
+            }
+        }
+
+        function submitExamPaper() {
+            let correctCount = 0;
+            allQuestions.forEach((q, idx) => {
+                if (studentAnswers[idx] && studentAnswers[idx].toUpperCase() === (q.answer || '').toUpperCase()) {
+                    correctCount++;
+                }
+            });
+
+            const score = ((correctCount / allQuestions.length) * 10).toFixed(2);
+            document.getElementById('resultScore').innerText = `${score}/10`;
+            document.getElementById('resultCorrectCount').innerText = `${correctCount}/${allQuestions.length}`;
+
+            // Lưu vào Lịch sử
+            const history = JSON.parse(localStorage.getItem('primux_exam_history') || '[]');
+            history.unshift({
+                id: Date.now(),
+                title: currentExamSession.title,
+                score: score,
+                correct: `${correctCount}/${allQuestions.length}`,
+                date: new Date().toLocaleDateString('vi-VN') + ' ' + new Date().toLocaleTimeString('vi-VN')
+            });
+            localStorage.setItem('primux_exam_history', JSON.stringify(history));
+
+            openModal('resultModal');
+        }
+
+        function reviewExplanations() {
+            closeModal('resultModal');
+            // Mở lại câu 1 và hiển thị giải thích
+            renderSingleQuestion(0);
+            allQuestions.forEach((q, idx) => {
+                const expBox = document.getElementById(`singleExpBox_${idx}`);
+                if (expBox) {
+                    expBox.classList.remove('hidden');
+                    expBox.innerHTML = `<b class="text-emerald-700 block mb-1">Đáp án chuẩn: ${q.answer}</b><b>Lời giải thích:</b> ${q.explanation || 'Không có giải thích chi tiết.'}`;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tổng quan - Primux THPT</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-deep": "#1e3a8a", "primary-main": "#2563eb", "primary-light": "#60a5fa",
+                        "primary-pale": "#dbeafe", "gold-dark": "#d97706", "gold-light": "#fef3c7"
+                    },
+                    fontFamily: { sans: ["Be Vietnam Pro", "sans-serif"] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; background-color: #f8fbff; }
+        .card-shadow { box-shadow: 0 10px 30px -5px rgba(30, 64, 175, 0.06), 0 4px 12px -2px rgba(30, 64, 175, 0.03); }
+        .gold-glow { text-shadow: 0 4px 15px rgba(217, 119, 6, 0.4); }
+        .gold-box-shadow { box-shadow: 0 15px 35px -10px rgba(30, 58, 138, 0.2); border: 1px solid rgba(147, 197, 253, 0.5); }
+        .btn-shadow { box-shadow: 0 6px 15px rgba(30, 64, 175, 0.2); transition: all 0.3s ease; }
+        .btn-shadow:hover:not(:disabled) { box-shadow: 0 10px 25px rgba(30, 64, 175, 0.3); transform: translateY(-1px); }
+
+        @keyframes pulseSlow { 0%, 100% { opacity: 0.25; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.03); } }
+        .radar-pulse { animation: pulseSlow 4s ease-in-out infinite; transform-origin: center; }
+
+        .popup-backdrop { opacity: 0; pointer-events: none; transition: opacity 0.35s ease; }
+        .popup-backdrop.active { opacity: 1; pointer-events: auto; }
+        .popup-box { transform: scale(0.85) translateY(20px); opacity: 0; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease; }
+        .popup-backdrop.active .popup-box { transform: scale(1) translateY(0); opacity: 1; }
+
+        .page-transition-overlay { position: fixed; inset: 0; background-color: #1e3a8a; z-index: 9999; pointer-events: none; opacity: 1; transition: opacity 0.35s ease; }
+        .page-transition-overlay.hidden-overlay { opacity: 0; }
+    </style>
+</head>
+<body class="bg-[#f4f8ff] text-slate-900 min-h-screen flex flex-col md:flex-row antialiased selection:bg-blue-600 selection:text-white relative">
+    <div id="pageOverlay" class="page-transition-overlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="w-full md:w-72 bg-white border-r border-blue-100 flex flex-col justify-between shrink-0 card-shadow z-20">
+        <div>
+            <!-- Logo -->
+            <div class="p-6 border-b border-blue-50 flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black text-lg shadow-md">P</div>
+                <div>
+                    <span class="text-xl font-black text-blue-950 tracking-tight block">PRIMUX</span>
+                    <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest block">THPT Quốc Gia · 2027</span>
+                </div>
+            </div>
+
+            <!-- Menu Navigation -->
+            <nav class="p-4 space-y-1.5">
+                <div class="text-[11px] font-extrabold text-slate-400 px-3 py-2 uppercase tracking-wider">Không gian học</div>
+                
+                <a href="index.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl bg-blue-600 text-white font-bold shadow-md transition-all">
+                    <span class="material-symbols-outlined text-[20px] text-amber-300">grid_view</span>
+                    <span class="text-sm">Tổng quan</span>
+                </a>
+
+                <a href="elite.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-blue-900 bg-amber-50 border border-amber-200 hover:bg-amber-100 font-extrabold transition-all group">
+                    <span class="material-symbols-outlined text-[20px] text-amber-500" style="font-variation-settings: 'FILL' 1;">stars</span>
+                    <span class="text-sm">Gói Primux Elite</span>
+                </a>
+
+                <a href="exam.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <span class="material-symbols-outlined text-[20px]">menu_book</span>
+                    <span class="text-sm">Luyện đề</span>
+                </a>
+
+                <a href="knowledge.html" class="nav-link flex items-center justify-between px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-[20px]">auto_stories</span>
+                        <span class="text-sm">Kho kiến thức</span>
+                    </div>
+                    <span id="sidebarKnowledgeBadge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase shadow-sm">ELITE</span>
+                </a>
+
+                <a href="analytics.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <span class="material-symbols-outlined text-[20px]">insights</span>
+                    <span class="text-sm">Phân tích</span>
+                </a>
+
+                <div class="text-[11px] font-extrabold text-slate-400 px-3 pt-5 pb-2 uppercase tracking-wider">Cá nhân hóa</div>
+
+                <a href="roadmap.html" class="nav-link flex items-center justify-between px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all group">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-[20px]">route</span>
+                        <span class="text-sm">Lộ trình của tôi</span>
+                    </div>
+                    <span id="sidebarRoadmapBadge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase shadow-sm">ELITE</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="p-4 space-y-2">
+            <!-- NÚT ADMIN NẾU CÓ QUYỀN -->
+            <a href="admin.html" id="adminPanelLink" class="hidden nav-link flex items-center gap-2 p-3 rounded-xl bg-blue-900 text-white hover:bg-blue-950 text-xs font-bold transition-all shadow-md">
+                <span class="material-symbols-outlined text-[18px] text-amber-400">admin_panel_settings</span> Cổng Quản Trị Hệ Thống
+            </a>
+
+            <a href="settings.html" class="nav-link flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 text-xs font-bold transition-all">
+                <span class="material-symbols-outlined text-[18px]">settings</span>
+                Cài đặt tài khoản
+            </a>
+
+            <!-- User Info Card -->
+            <div class="flex items-center justify-between p-3 rounded-2xl bg-blue-50/60 border border-blue-100">
+                <div class="flex items-center gap-3 cursor-pointer group" onclick="editUserName()" title="Bấm để đổi tên">
+                    <div id="userAvatar" class="w-10 h-10 rounded-xl bg-blue-600 text-white font-extrabold flex items-center justify-center text-base shadow-sm">H</div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <span id="userSidebarName" class="text-sm font-bold text-blue-950">Nguyễn Anh Hào</span>
+                            <span id="userEliteBadgeSidebar" class="hidden text-amber-500"><span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">stars</span></span>
+                        </div>
+                        <div class="text-xs text-slate-500 font-medium">Học sinh lớp 12</div>
+                    </div>
+                </div>
+                <button onclick="logoutUser()" title="Đăng xuất" class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">logout</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        <!-- TOPBAR -->
+        <header class="h-20 bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-blue-100 px-8 flex items-center justify-between">
+            <div>
+                <div id="realtimeDate" class="text-xs font-extrabold text-blue-600 uppercase tracking-widest flex items-center gap-2">
+                    <span>ĐANG CẬP NHẬT...</span>
+                </div>
+                <h1 class="text-2xl font-black text-blue-950 flex items-center gap-2">
+                    Chào <span id="userGreetingName" class="text-blue-900 cursor-pointer hover:underline" onclick="editUserName()">Anh Hào</span>
+                    <span id="userEliteBadgeHeader" class="hidden inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-400 text-blue-950 font-black text-xs shadow-sm">ELITE VIP</span>
+                </h1>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div id="topbarEliteAction">
+                    <a href="elite.html" class="nav-link flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 text-white font-black text-xs shadow-md hover:bg-blue-700 transition">Nâng cấp Elite</a>
+                </div>
+                <button class="w-10 h-10 rounded-xl bg-blue-50 text-blue-900 flex items-center justify-center font-bold border border-blue-100 shadow-sm">
+                    <span class="material-symbols-outlined text-[20px]">notifications</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- DASHBOARD CONTAINER -->
+        <div class="p-6 md:p-8 space-y-6 max-w-7xl w-full mx-auto">
+            
+            <!-- HERO BANNER -->
+            <section class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 rounded-3xl p-8 md:p-10 text-white relative overflow-hidden gold-box-shadow flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:28px_28px] pointer-events-none"></div>
+
+                <div class="relative z-10 max-w-xl space-y-4 text-center md:text-left">
+                    <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/10 text-amber-300 border border-amber-400/30 text-xs font-extrabold uppercase tracking-wider">
+                        <span class="material-symbols-outlined text-[16px]">location_searching</span> Vị trí điểm số hiện tại
+                    </span>
+                    <h2 class="text-3xl md:text-4xl font-black leading-tight">
+                        Bạn đang ở <span class="text-amber-300 gold-glow">27.45</span> điểm.
+                    </h2>
+                    <p class="text-blue-100 text-sm md:text-base font-medium leading-relaxed">
+                        Mục tiêu tuyển sinh của bạn là <b class="text-white font-bold">29.00</b>. Hệ thống AI đã phân tích và tìm thấy <span class="text-amber-300 font-bold underline">3 vùng chuyên đề</span> giúp kéo điểm nhanh nhất.
+                    </p>
+                    <div class="pt-2">
+                        <a href="roadmap.html" class="nav-link inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-blue-950 font-black shadow-lg transition-all">
+                            <span>Vào học lộ trình AI hôm nay</span>
+                            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="relative z-10 bg-white/10 backdrop-blur-xl border border-white/20 p-6 md:p-8 rounded-3xl text-center w-full md:w-80 shrink-0 shadow-2xl">
+                    <div class="text-xs font-extrabold uppercase tracking-wider text-blue-200 mb-1">Điểm đánh giá dự kiến</div>
+                    <div class="text-5xl font-black text-white my-2">27<span class="text-amber-300">.45</span></div>
+                    <div class="my-4 space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-blue-200"><span>Hiện tại: 27.45</span><span class="text-amber-300">Mục tiêu: 29.00</span></div>
+                        <div class="w-full h-3 bg-white/20 rounded-full overflow-hidden p-0.5"><div class="h-full bg-gradient-to-r from-cyan-400 to-amber-300 rounded-full" style="width: 86%;"></div></div>
+                    </div>
+                    <div class="text-xs font-bold text-emerald-300 flex items-center justify-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">trending_up</span> Tăng +1.35 điểm trong 30 ngày qua
+                    </div>
+                </div>
+            </section>
+
+            <!-- TỔNG QUAN THÀNH TÍCH (ACHIEVEMENTS OVERVIEW) -->
+            <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                <div class="bg-white p-5 rounded-3xl border border-blue-100 card-shadow flex flex-col justify-center items-start hover:-translate-y-1 transition-transform">
+                    <div class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3">
+                        <span class="material-symbols-outlined text-[22px]">schedule</span>
+                    </div>
+                    <div class="text-2xl font-black text-blue-950">128<span class="text-base text-slate-500 font-bold">h</span></div>
+                    <div class="text-xs text-slate-500 font-bold uppercase mt-1 tracking-wide">Thời gian ôn luyện</div>
+                </div>
+
+                <div class="bg-white p-5 rounded-3xl border border-blue-100 card-shadow flex flex-col justify-center items-start hover:-translate-y-1 transition-transform">
+                    <div class="w-10 h-10 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center mb-3">
+                        <span class="material-symbols-outlined text-[22px]">local_fire_department</span>
+                    </div>
+                    <div class="text-2xl font-black text-blue-950">14<span class="text-base text-slate-500 font-bold"> ngày</span></div>
+                    <div class="text-xs text-slate-500 font-bold uppercase mt-1 tracking-wide">Chuỗi ngày học liên tục</div>
+                </div>
+
+                <div class="bg-white p-5 rounded-3xl border border-blue-100 card-shadow flex flex-col justify-center items-start hover:-translate-y-1 transition-transform">
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3">
+                        <span class="material-symbols-outlined text-[22px]">task</span>
+                    </div>
+                    <div class="text-2xl font-black text-blue-950">42<span class="text-base text-slate-500 font-bold"> đề</span></div>
+                    <div class="text-xs text-slate-500 font-bold uppercase mt-1 tracking-wide">Bài thi đã hoàn thành</div>
+                </div>
+
+                <div class="bg-white p-5 rounded-3xl border border-blue-100 card-shadow flex flex-col justify-center items-start hover:-translate-y-1 transition-transform">
+                    <div class="w-10 h-10 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center mb-3">
+                        <span class="material-symbols-outlined text-[22px]">military_tech</span>
+                    </div>
+                    <div class="text-xl font-black text-blue-950">Thủ Khoa</div>
+                    <div class="text-xs text-slate-500 font-bold uppercase mt-1 tracking-wide">Danh hiệu hiện tại</div>
+                </div>
+            </section>
+
+            <!-- 2-COLUMN GRID (RADAR & LESSION SUGGESTIONS) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- RADAR CHART -->
+                <section class="lg:col-span-7 bg-white p-7 rounded-3xl border border-blue-100 card-shadow flex flex-col justify-between">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <div class="text-[11px] font-extrabold text-blue-600 uppercase tracking-wider mb-1">PHÂN TÍCH CHUYÊN SÂU</div>
+                            <h3 class="text-xl font-extrabold text-blue-950">Biểu đồ Phân bổ Năng lực & Thời gian</h3>
+                        </div>
+                        <a href="analytics.html" class="nav-link text-xs font-bold text-blue-600 hover:underline flex items-center gap-1">Chi tiết báo cáo <span class="material-symbols-outlined text-[16px]">chevron_right</span></a>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-6">
+                        <!-- Biểu đồ mạng nhện SVG -->
+                        <div class="flex justify-center relative">
+                            <svg class="w-64 h-64" viewBox="0 0 300 300">
+                                <polygon points="150,30 264,113 220,247 80,247 36,113" fill="none" stroke="#cbd5e1" stroke-width="1.5" />
+                                <polygon points="150,70 226,125 197,215 103,215 74,125" fill="none" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 3"/>
+                                <polygon points="150,110 188,138 173,182 127,182 112,138" fill="none" stroke="#cbd5e1" stroke-width="1.5" />
+                                <line x1="150" y1="150" x2="150" y2="30" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <line x1="150" y1="150" x2="264" y2="113" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <line x1="150" y1="150" x2="220" y2="247" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <line x1="150" y1="150" x2="80" y2="247" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <line x1="150" y1="150" x2="36" y2="113" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <!-- Vùng năng lực -->
+                                <polygon class="radar-pulse" points="150,55 240,120 205,230 95,220 55,120" fill="#2563eb" fill-opacity="0.25" stroke="#2563eb" stroke-width="2.5" />
+                                
+                                <text x="150" y="20" text-anchor="middle" class="text-[11px] font-extrabold fill-blue-900">TOÁN (8.2)</text>
+                                <text x="270" y="115" text-anchor="start" class="text-[11px] font-extrabold fill-blue-900">TIN (9.1)</text>
+                                <text x="225" y="265" text-anchor="middle" class="text-[11px] font-extrabold fill-blue-900">ANH (7.8)</text>
+                                <text x="75" y="265" text-anchor="middle" class="text-[11px] font-extrabold fill-blue-900">LÝ (7.4)</text>
+                                <text x="25" y="115" text-anchor="end" class="text-[11px] font-extrabold fill-blue-900">HÓA (8.6)</text>
+                            </svg>
+                        </div>
+
+                        <div class="bg-blue-50/70 p-5 rounded-2xl border border-blue-100 space-y-3">
+                            <div class="flex items-center gap-1.5 text-xs font-black text-blue-900">
+                                <span class="material-symbols-outlined text-[18px] text-amber-500">psychology</span> CHẨN ĐOÁN LỖI SAI
+                            </div>
+                            <h4 class="font-extrabold text-sm text-blue-950">Hình học Oxyz đang kéo điểm Toán xuống</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed">Bạn đúng 58% các câu phân loại Oxyz trong 30 bài luyện gần nhất. Thời gian trung bình giải câu này đang là 3.5 phút (quá chậm).</p>
+                            <div class="pt-2 flex items-center justify-between border-t border-blue-100 mt-2">
+                                <span class="text-xs font-bold text-slate-500">Tiềm năng bứt phá:</span>
+                                <span class="text-sm font-black text-blue-700 bg-white px-2.5 py-1 rounded-lg border border-blue-200">+0.6 điểm</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- LESSON SUGGESTIONS -->
+                <section class="lg:col-span-5 bg-white p-7 rounded-3xl border border-blue-100 card-shadow flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <div class="text-[11px] font-extrabold text-blue-600 uppercase tracking-wider mb-1">SMART SUGGESTIONS</div>
+                                <h3 class="text-xl font-extrabold text-blue-950">Gợi Ý Bài Học Mới</h3>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-[10px] font-extrabold text-emerald-700 uppercase flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px]">auto_awesome</span> MỚI
+                            </span>
+                        </div>
+
+                        <div class="space-y-3">
+                            <a href="knowledge.html" class="nav-link p-4 rounded-2xl bg-blue-50/50 hover:bg-blue-100/60 border border-blue-100 transition flex items-center justify-between group block">
+                                <div class="flex items-center gap-3.5">
+                                    <div class="w-10 h-10 rounded-xl bg-blue-600 text-white font-black flex items-center justify-center shrink-0">
+                                        <span class="material-symbols-outlined text-[20px]">menu_book</span>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-extrabold text-blue-950 group-hover:text-blue-700 transition">Phương pháp dồn chất Hóa Học</div>
+                                        <div class="text-[11px] text-slate-500 mt-0.5">Kho tài liệu VIP · Este đa chức</div>
+                                    </div>
+                                </div>
+                            </a>
+                            
+                            <a href="exam.html" class="nav-link p-4 rounded-2xl bg-blue-50/50 hover:bg-blue-100/60 border border-blue-100 transition flex items-center justify-between group block">
+                                <div class="flex items-center gap-3.5">
+                                    <div class="w-10 h-10 rounded-xl bg-blue-600 text-white font-black flex items-center justify-center shrink-0">
+                                        <span class="material-symbols-outlined text-[20px]">timer</span>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-extrabold text-blue-950 group-hover:text-blue-700 transition">Mini Test: Dao Động Cơ (Lý)</div>
+                                        <div class="text-[11px] text-slate-500 mt-0.5">Luyện đề · 15 câu · ~20 phút</div>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <a href="exam.html" class="nav-link p-4 rounded-2xl bg-blue-50/50 hover:bg-blue-100/60 border border-blue-100 transition flex items-center justify-between group block">
+                                <div class="flex items-center gap-3.5">
+                                    <div class="w-10 h-10 rounded-xl bg-blue-600 text-white font-black flex items-center justify-center shrink-0">
+                                        <span class="material-symbols-outlined text-[20px]">translate</span>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-extrabold text-blue-950 group-hover:text-blue-700 transition">100 Collocations mức độ 8+</div>
+                                        <div class="text-[11px] text-slate-500 mt-0.5">Tiếng Anh · Từ vựng nâng cao</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <footer class="mt-auto px-8 py-6 border-t border-blue-100 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-medium gap-2">
+            <span>© 2026 PRIMUX · Nền tảng Ôn thi Đại học & THPT Quốc Gia</span>
+            <span class="font-mono text-[11px] text-blue-600 font-bold">SYSTEM BUILD 4.0.0</span>
+        </footer>
+    </main>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('pageOverlay')?.classList.add('hidden-overlay');
+            renderUserInterface();
+        });
+
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href && href !== '#' && !href.startsWith('javascript')) {
+                    e.preventDefault();
+                    document.getElementById('pageOverlay')?.classList.remove('hidden-overlay');
+                    setTimeout(() => window.location.href = href, 300);
+                }
+            });
+        });
+
+        function updateVietnamRealtime() {
+            const now = new Date();
+            const daysOfWeek = ['CHỦ NHẬT', 'THỨ HAI', 'THỨ BA', 'THỨ TƯ', 'THỨ NĂM', 'THỨ SÁU', 'THỨ BẢY'];
+            const dateElement = document.getElementById('realtimeDate');
+            if (dateElement) {
+                dateElement.innerHTML = `
+                    <span>${daysOfWeek[now.getDay()]} · ${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}</span>
+                    <span class="text-blue-400">|</span>
+                    <span class="font-mono text-blue-700 font-black">${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} (GMT+7)</span>
+                `;
+            }
+        }
+        updateVietnamRealtime();
+        setInterval(updateVietnamRealtime, 1000);
+
+        function renderUserInterface() {
+            const savedName = localStorage.getItem('primux_user_name') || 'Nguyễn Anh Hào';
+            const userRole = localStorage.getItem('primux_user_role') || 'user';
+            const isElite = !!localStorage.getItem('primux_elite_plan');
+
+            document.getElementById('userGreetingName').innerText = savedName;
+            document.getElementById('userSidebarName').innerText = savedName;
+            document.getElementById('userAvatar').innerText = savedName.trim().charAt(0).toUpperCase();
+
+            // Hiển thị nút Admin nếu tài khoản có role là Admin HOẶC có token login
+            if (userRole === 'admin' || localStorage.getItem('primux_admin_token')) {
+                document.getElementById('adminPanelLink')?.classList.remove('hidden');
+            }
+
+            const kbBadge = document.getElementById('sidebarKnowledgeBadge');
+            const rbBadge = document.getElementById('sidebarRoadmapBadge');
+            const topbarAction = document.getElementById('topbarEliteAction');
+
+            if (isElite) {
+                document.getElementById('userEliteBadgeHeader')?.classList.remove('hidden');
+                document.getElementById('userEliteBadgeSidebar')?.classList.remove('hidden');
+                if(kbBadge) { kbBadge.innerText = "VIP"; kbBadge.className = "inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400 text-blue-950 text-[10px] font-black uppercase shadow-sm"; }
+                if(rbBadge) { rbBadge.innerText = "VIP"; rbBadge.className = "inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400 text-blue-950 text-[10px] font-black uppercase shadow-sm"; }
+                if(topbarAction) { topbarAction.innerHTML = `<a href="elite.html" class="nav-link flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-100 border border-amber-300 text-blue-950 font-black text-xs shadow-sm hover:bg-amber-200 transition"><span class="material-symbols-outlined text-amber-600 text-[16px]" style="font-variation-settings: 'FILL' 1;">stars</span>Primux Elite</a>`; }
+            } else {
+                document.getElementById('userEliteBadgeHeader')?.classList.add('hidden');
+                document.getElementById('userEliteBadgeSidebar')?.classList.add('hidden');
+                if(kbBadge) { kbBadge.innerText = "ELITE"; kbBadge.className = "inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase shadow-sm"; }
+                if(rbBadge) { rbBadge.innerText = "ELITE"; rbBadge.className = "inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase shadow-sm"; }
+                if(topbarAction) { topbarAction.innerHTML = `<a href="elite.html" class="nav-link flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 text-white font-black text-xs shadow-md hover:bg-blue-700 transition">Nâng cấp Elite</a>`; }
+            }
+        }
+        
+        function editUserName() {
+            const currentName = localStorage.getItem('primux_user_name') || 'Nguyễn Anh Hào';
+            const newName = prompt('Nhập tên hiển thị của bạn:', currentName);
+            if (newName && newName.trim() !== '') {
+                localStorage.setItem('primux_user_name', newName.trim());
+                renderUserInterface();
+            }
+        }
+
+        function logoutUser() {
+            if(confirm("Bạn có chắc chắn muốn đăng xuất?")) {
+                localStorage.removeItem('primux_user_name');
+                localStorage.removeItem('primux_is_elite');
+                localStorage.removeItem('primux_elite_plan');
+                localStorage.removeItem('primux_user_role');
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>

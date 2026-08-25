@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kho kiến thức VIP - Primux THPT</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { "primary-deep": "#1e3a8a", "primary-main": "#2563eb", "primary-light": "#60a5fa" }, fontFamily: { sans: ["Be Vietnam Pro", "sans-serif"] } } } }
+    </script>
+    <style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; background-color: #f8fbff; }
+        .card-shadow { box-shadow: 0 10px 30px -5px rgba(30, 64, 175, 0.06); }
+        .popup-backdrop { opacity: 0; pointer-events: none; transition: opacity 0.35s ease; }
+        .popup-backdrop.active { opacity: 1; pointer-events: auto; }
+        .popup-box { transform: scale(0.85); transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .popup-backdrop.active .popup-box { transform: scale(1); }
+        .page-transition-overlay { position: fixed; inset: 0; background-color: #1e3a8a; z-index: 9999; pointer-events: none; opacity: 1; transition: opacity 0.35s ease; }
+        .page-transition-overlay.hidden-overlay { opacity: 0; }
+    </style>
+</head>
+<body class="bg-[#f4f8ff] text-slate-900 min-h-screen flex flex-col md:flex-row antialiased">
+    <div id="pageOverlay" class="page-transition-overlay"></div>
+
+    <aside class="w-full md:w-72 bg-white border-r border-blue-100 flex flex-col justify-between shrink-0 card-shadow z-20">
+        <div>
+            <div class="p-6 border-b border-blue-50 flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black text-lg shadow-md">P</div>
+                <div><span class="text-xl font-black text-blue-950 block">PRIMUX</span><span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest block">THPT Quốc Gia · 2027</span></div>
+            </div>
+            <nav class="p-4 space-y-1.5">
+                <a href="index.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <span class="material-symbols-outlined text-[20px]">grid_view</span> <span class="text-sm">Tổng quan</span>
+                </a>
+                <a href="elite.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-blue-900 bg-amber-50 border border-amber-200 hover:bg-amber-100 font-extrabold transition-all group">
+                    <span class="material-symbols-outlined text-[20px] text-amber-500" style="font-variation-settings: 'FILL' 1;">stars</span> <span class="text-sm">Gói Primux Elite</span>
+                </a>
+                <a href="exam.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <span class="material-symbols-outlined text-[20px]">menu_book</span> <span class="text-sm">Luyện đề</span>
+                </a>
+                <a href="knowledge.html" class="nav-link flex items-center justify-between px-3.5 py-3 rounded-xl bg-blue-600 text-white font-bold shadow-md transition-all">
+                    <div class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-amber-300">auto_stories</span> <span class="text-sm">Kho kiến thức</span></div>
+                    <span id="sidebarKnowledgeBadge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase shadow-sm">ELITE</span>
+                </a>
+                <a href="roadmap.html" class="nav-link flex items-center justify-between px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <div class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px]">route</span> <span class="text-sm">Lộ trình của tôi</span></div>
+                    <span id="sidebarRoadmapBadge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase shadow-sm">ELITE</span>
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        <header class="h-20 bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-blue-100 px-8 flex items-center justify-between">
+            <div>
+                <span class="text-xs font-extrabold text-blue-600 uppercase tracking-widest flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">stars</span> ĐẶC QUYỀN ELITE VIP</span>
+                <h1 class="text-2xl font-black text-blue-950">Kho Sổ Tay Lý Thuyết & Tài Liệu PDF</h1>
+            </div>
+        </header>
+
+        <div class="p-6 md:p-8 space-y-8 max-w-7xl w-full mx-auto">
+            <!-- Subject Filter Tabs -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-2">
+                <button onclick="filterSubject('all')" class="subject-tab active px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold shrink-0">Tất cả môn</button>
+                <button onclick="filterSubject('math')" class="subject-tab px-4 py-2 rounded-xl bg-white border border-blue-200 text-blue-900 text-xs font-bold hover:bg-blue-50 shrink-0">Toán học</button>
+                <button onclick="filterSubject('physics')" class="subject-tab px-4 py-2 rounded-xl bg-white border border-blue-200 text-blue-900 text-xs font-bold hover:bg-blue-50 shrink-0">Vật lý</button>
+                <button onclick="filterSubject('chem')" class="subject-tab px-4 py-2 rounded-xl bg-white border border-blue-200 text-blue-900 text-xs font-bold hover:bg-blue-50 shrink-0">Hóa học</button>
+                <button onclick="filterSubject('bio')" class="subject-tab px-4 py-2 rounded-xl bg-white border border-blue-200 text-blue-900 text-xs font-bold hover:bg-blue-50 shrink-0">Sinh học</button>
+            </div>
+
+            <!-- Danh sách tài liệu render động từ Admin -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="knowledgeGrid"></div>
+        </div>
+    </main>
+
+    <!-- POPUP XEM TÀI LIỆU VIP -->
+    <div id="docViewerModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm popup-backdrop">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-8 text-center shadow-2xl border border-blue-100 relative popup-box">
+            <button onclick="closeModal('docViewerModal')" class="absolute top-5 right-5 text-slate-400 hover:text-blue-900"><span class="material-symbols-outlined">close</span></button>
+            <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4">
+                <span class="material-symbols-outlined text-4xl">menu_book</span>
+            </div>
+            <span id="docSubjectBadge" class="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-black uppercase inline-block mb-2">MÔN HỌC</span>
+            <h3 id="docTitle" class="text-xl font-black text-blue-950 mb-2">Tên Tài Liệu</h3>
+            <p id="docContentDesc" class="text-xs text-slate-500 mb-6 leading-relaxed">Mô tả chi tiết tài liệu</p>
+            <button onclick="downloadPdf()" class="w-full py-3.5 rounded-xl font-black text-xs text-white bg-blue-600 hover:bg-blue-700 transition shadow-lg">Tải xuống file PDF hoàn chỉnh</button>
+        </div>
+    </div>
+
+    <!-- POPUP YÊU CẦU VIP -->
+    <div id="vipRequiredModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm popup-backdrop">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 text-center shadow-2xl border border-blue-100 relative popup-box">
+            <button onclick="closeModal('vipRequiredModal')" class="absolute top-5 right-5 text-slate-400 hover:text-blue-900"><span class="material-symbols-outlined">close</span></button>
+            <div class="w-16 h-16 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto mb-4">
+                <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">stars</span>
+            </div>
+            <h3 class="text-2xl font-black text-blue-950 mb-2">Tài Liệu Elite VIP</h3>
+            <p class="text-sm text-slate-600 mb-6 font-medium">Bạn cần kích hoạt gói <b>Primux Elite</b> để mở khóa tài liệu này.</p>
+            <a href="elite.html" class="block w-full py-3.5 rounded-xl font-black text-sm text-blue-950 bg-amber-400 hover:bg-amber-500 transition shadow-lg">Nâng cấp Elite ngay</a>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('pageOverlay')?.classList.add('hidden-overlay');
+            renderUserDocs();
+            renderUserInterface();
+        });
+
+        function isEliteUser() { return !!localStorage.getItem('primux_elite_plan'); }
+        function openModal(id) { document.getElementById(id)?.classList.add('active'); }
+        function closeModal(id) { document.getElementById(id)?.classList.remove('active'); }
+
+        function renderUserDocs() {
+            const docs = JSON.parse(localStorage.getItem('primux_knowledge_docs') || '[]');
+            const container = document.getElementById('knowledgeGrid');
+            container.innerHTML = '';
+
+            docs.forEach(doc => {
+                const el = document.createElement('div');
+                el.className = "doc-card bg-white p-6 rounded-3xl border border-blue-100 card-shadow flex flex-col justify-between hover:-translate-y-1 transition-all";
+                el.dataset.subject = doc.subject;
+                el.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-black">${doc.subjectName || doc.subject.toUpperCase()}</span>
+                            <span class="lock-status text-amber-500 text-xs font-black flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[16px]">${isEliteUser() ? 'lock_open' : 'lock'}</span> ${isEliteUser() ? 'ĐÃ MỞ' : 'ELITE'}
+                            </span>
+                        </div>
+                        <h3 class="text-lg font-black text-blue-950 mb-2">${doc.title}</h3>
+                        <p class="text-xs text-slate-600 mb-4 leading-relaxed">${doc.desc}</p>
+                    </div>
+                    <button onclick="handleDocOpen('${doc.title}', '${doc.subjectName || doc.subject}', '${doc.desc}')" class="w-full py-3 rounded-xl bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-900 font-bold text-xs transition flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[16px]">visibility</span> Xem chi tiết tài liệu
+                    </button>
+                `;
+                container.appendChild(el);
+            });
+        }
+
+        function handleDocOpen(title, subject, desc) {
+            if (isEliteUser()) {
+                document.getElementById('docTitle').innerText = title;
+                document.getElementById('docSubjectBadge').innerText = subject;
+                document.getElementById('docContentDesc').innerText = desc;
+                openModal('docViewerModal');
+            } else {
+                openModal('vipRequiredModal');
+            }
+        }
+
+        function downloadPdf() {
+            closeModal('docViewerModal');
+            alert("Đang tải xuống file PDF tài liệu chuyên sâu...");
+        }
+
+        function filterSubject(sub) {
+            document.querySelectorAll('.doc-card').forEach(card => {
+                card.style.display = (sub === 'all' || card.dataset.subject === sub) ? 'flex' : 'none';
+            });
+        }
+
+        function renderUserInterface() {
+            const kbBadge = document.getElementById('sidebarKnowledgeBadge');
+            const rbBadge = document.getElementById('sidebarRoadmapBadge');
+            if (isEliteUser()) {
+                if (kbBadge) { kbBadge.innerText = "VIP"; kbBadge.className = "inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400 text-blue-950 text-[10px] font-black uppercase shadow-sm"; }
+                if (rbBadge) { rbBadge.innerText = "VIP"; rbBadge.className = "inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400 text-blue-950 text-[10px] font-black uppercase shadow-sm"; }
+            }
+        }
+    </script>
+</body>
+</html>

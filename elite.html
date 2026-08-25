@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gói Primux Elite - Đặc Quyền VIP</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-deep": "#1e3a8a",
+                        "primary-main": "#2563eb",
+                        "primary-light": "#60a5fa",
+                        "primary-pale": "#dbeafe",
+                        "gold-dark": "#d97706",
+                        "gold-light": "#fef3c7"
+                    },
+                    fontFamily: { sans: ["Be Vietnam Pro", "sans-serif"] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; background-color: #f8fbff; }
+        .card-shadow { box-shadow: 0 10px 30px -5px rgba(30, 64, 175, 0.08), 0 4px 12px -2px rgba(30, 64, 175, 0.04); }
+        .gold-glow { text-shadow: 0 4px 15px rgba(217, 119, 6, 0.4); }
+        .gold-box-shadow { box-shadow: 0 15px 35px -10px rgba(30, 58, 138, 0.2); border: 1px solid rgba(147, 197, 253, 0.6); }
+        .btn-shadow { box-shadow: 0 6px 15px rgba(37, 99, 235, 0.25); transition: all 0.3s ease; }
+        .btn-shadow:hover:not(:disabled) { box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35); transform: translateY(-2px); }
+        
+        @keyframes floatMath {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.85; }
+            50% { transform: translateY(-16px) rotate(5deg); opacity: 1; }
+        }
+        @keyframes spinOrbit { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .orbit-spin { animation: spinOrbit 16s linear infinite; }
+        .float-item-1 { animation: floatMath 6s ease-in-out infinite; }
+        .float-item-2 { animation: floatMath 8s ease-in-out infinite 2s; }
+        .float-item-3 { animation: floatMath 7s ease-in-out infinite 4s; }
+
+        .popup-backdrop { opacity: 0; pointer-events: none; transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .popup-backdrop.active { opacity: 1; pointer-events: auto; }
+        .popup-box { transform: scale(0.85) translateY(20px); opacity: 0; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease; }
+        .popup-backdrop.active .popup-box { transform: scale(1) translateY(0); opacity: 1; }
+
+        .page-transition-overlay { position: fixed; inset: 0; background-color: #1e3a8a; z-index: 9999; pointer-events: none; opacity: 1; transition: opacity 0.35s ease; }
+        .page-transition-overlay.hidden-overlay { opacity: 0; }
+    </style>
+</head>
+<body class="bg-[#f4f8ff] text-slate-900 min-h-screen flex flex-col relative overflow-x-hidden selection:bg-blue-600 selection:text-white">
+    <div id="pageOverlay" class="page-transition-overlay"></div>
+
+    <!-- BACKGROUND TOÁN LÝ HÓA -->
+    <div class="fixed inset-0 pointer-events-none select-none overflow-hidden z-0">
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#2563eb0d_1px,transparent_1px),linear-gradient(to_bottom,#2563eb0d_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-30">
+            <svg class="w-[900px] h-[900px]" viewBox="0 0 400 400" fill="none">
+                <g class="orbit-spin" style="transform-origin: 200px 200px;">
+                    <ellipse cx="200" cy="200" rx="180" ry="65" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="6 4" transform="rotate(30 200 200)"/>
+                    <ellipse cx="200" cy="200" rx="180" ry="65" stroke="#d97706" stroke-width="2.5" transform="rotate(90 200 200)"/>
+                    <ellipse cx="200" cy="200" rx="180" ry="65" stroke="#059669" stroke-width="2.5" stroke-dasharray="8 4" transform="rotate(150 200 200)"/>
+                </g>
+            </svg>
+        </div>
+
+        <div class="absolute top-10 left-10 text-blue-600 font-mono text-2xl font-extrabold float-item-1">∫ f(x)dx = F(x)</div>
+        <div class="absolute top-14 right-14 text-emerald-600 font-mono text-2xl font-black float-item-2">H₂O ⇌ H⁺ + OH⁻</div>
+        <div class="absolute bottom-14 left-14 text-amber-600 font-mono text-3xl font-black float-item-3">E = mc²</div>
+        <div class="absolute bottom-16 right-16 text-indigo-600 font-mono text-2xl font-extrabold float-item-1">PV = nRT</div>
+        <div class="absolute top-1/2 left-6 text-sky-600 font-mono text-xl font-bold float-item-2">lim x→∞</div>
+        <div class="absolute top-1/3 right-8 text-amber-500 font-mono text-xl font-bold float-item-3">λ = v / f</div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="relative z-10 w-full px-8 py-6 max-w-7xl mx-auto flex items-center justify-between border-b border-blue-100 bg-white/70 backdrop-blur-md rounded-b-2xl card-shadow">
+        <a href="index.html" class="nav-link flex items-center gap-3 group">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-900 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">
+                <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+            </div>
+            <div>
+                <span class="text-xl font-black text-blue-950 tracking-tight block">PRIMUX ELITE</span>
+                <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest block">Trang Nâng Cấp VIP</span>
+            </div>
+        </a>
+        <div class="flex items-center gap-3">
+            <span class="text-xs text-slate-500">Tài khoản: <b id="displayUsername" class="text-blue-950">Nguyễn Anh Hào</b></span>
+            <div id="currentPlanBadge" class="px-3.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-xs font-black uppercase shadow-sm">
+                GÓI MIỄN PHÍ
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 flex-1 max-w-7xl mx-auto px-6 py-12 flex flex-col justify-center space-y-12 w-full">
+        <div class="text-center max-w-3xl mx-auto space-y-3">
+            <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-blue-100 border border-blue-300 text-xs font-black text-blue-800 uppercase tracking-widest shadow-sm">
+                <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">stars</span>
+                ĐẶC QUYỀN VIP ÔN THI THPT
+            </span>
+            <h1 class="text-3xl md:text-5xl font-black text-blue-950">Nâng Cấp Gói <span class="text-amber-500">Primux Elite</span></h1>
+            <p class="text-sm md:text-base text-slate-600 font-medium leading-relaxed">
+                Mở khóa không giới hạn lộ trình AI bứt phá điểm số, toàn bộ ngân hàng câu hỏi phân loại cao và phòng thi thử trực tuyến.
+            </p>
+        </div>
+
+        <!-- 4 Cards Plan -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="pricingCards">
+            <!-- Gói 1 Tháng -->
+            <div class="plan-card bg-white p-6 rounded-3xl border border-blue-100 card-shadow transition-all duration-300 flex flex-col justify-between hover:-translate-y-1" data-plan="1 Tháng">
+                <div>
+                    <div class="text-xs font-extrabold uppercase text-slate-400 tracking-wider mb-2">Gói Khởi Động</div>
+                    <h3 class="text-xl font-black text-blue-950 mb-4">1 Tháng</h3>
+                    <div class="text-3xl font-black text-blue-600 mb-1">49.000<span class="text-sm font-bold text-slate-500">đ</span></div>
+                    <p class="text-xs text-slate-500 mb-6 font-medium">Làm quen phương pháp & luyện tập ngắn hạn.</p>
+                    <ul class="space-y-2.5 text-xs text-slate-700 font-bold border-t border-slate-100 pt-4">
+                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-blue-600 text-[18px]">check_circle</span> Mở khóa kho đề thi</li>
+                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-blue-600 text-[18px]">check_circle</span> AI chấm điểm chi tiết</li>
+                    </ul>
+                </div>
+                <button onclick="requestCheckout('1 Tháng')" class="plan-btn mt-6 w-full py-3 rounded-xl font-extrabold text-xs text-blue-900 bg-blue-50 border border-blue-200 hover:bg-blue-600 hover:text-white transition shadow-sm">
+                    Đăng ký ngay
+                </button>
+            </div>
+
+            <!-- Gói 3 Tháng -->
+            <div class="plan-card bg-white p-6 rounded-3xl border border-blue-100 card-shadow transition-all duration-300 flex flex-col justify-between hover:-translate-y-1" data-plan="3 Tháng">
+                <div>
+                    <div class="text-xs font-extrabold uppercase text-slate-400 tracking-wider mb-2">Gói Bứt Phá</div>
+                    <h3 class="text-xl font-black text-blue-950 mb-4">3 Tháng</h3>
+                    <div class="text-3xl font-black text-blue-600 mb-1">99.000<span class="text-sm font-bold text-slate-500">đ</span></div>
+                    <p class="text-xs text-slate-500 mb-6 font-medium">Tiết kiệm 32% chi phí ôn luyện.</p>
+                    <ul class="space-y-2.5 text-xs text-slate-700 font-bold border-t border-slate-100 pt-4">
+                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-blue-600 text-[18px]">check_circle</span> Tất cả quyền lợi gói 1 tháng</li>
+                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-blue-600 text-[18px]">check_circle</span> Phòng thi thử trực tuyến</li>
+                    </ul>
+                </div>
+                <button onclick="requestCheckout('3 Tháng')" class="plan-btn mt-6 w-full py-3 rounded-xl font-extrabold text-xs text-blue-900 bg-blue-50 border border-blue-200 hover:bg-blue-600 hover:text-white transition shadow-sm">
+                    Đăng ký ngay
+                </button>
+            </div>
+
+            <!-- Gói 6 Tháng (Nổi bật) -->
+            <div class="plan-card bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 p-6 rounded-3xl text-white flex flex-col justify-between relative transform lg:-translate-y-2 shadow-2xl border border-amber-400/60" data-plan="6 Tháng">
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-amber-400 text-blue-950 font-black text-[10px] uppercase tracking-wider shadow-md">
+                    Khuyên Dùng · Tiết Kiệm
+                </div>
+                <div>
+                    <div class="text-xs font-extrabold uppercase text-amber-300 tracking-wider mb-2 pt-2">Gói Luyện Thi THPT</div>
+                    <h3 class="text-2xl font-black mb-4">6 Tháng</h3>
+                    <div class="text-4xl font-black text-amber-300 gold-glow mb-1">159.000<span class="text-sm font-bold text-blue-200">đ</span></div>
+                    <p class="text-xs text-blue-100 mb-6 font-medium">Ôn tập chuyên sâu toàn diện các môn thi.</p>
+                    <ul class="space-y-2.5 text-xs text-white font-bold border-t border-white/20 pt-4">
+                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-amber-300 text-[18px]">check_circle</span> Lộ trình cá nhân hóa AI</li>
+                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-amber-300 text-[18px]">check_circle</span> Mở khóa kho kiến thức VIP</li>
+                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-amber-300 text-[18px]">check_circle</span> Tải tài liệu & đáp án PDF</li>
+                    </ul>
+                </div>
+                <button onclick="requestCheckout('6 Tháng')" class="plan-btn mt-6 w-full py-3.5 rounded-xl font-black text-xs text-blue-950 bg-amber-400 hover:bg-amber-500 transition shadow-lg active:scale-95">
+                    Nâng cấp ngay
+                </button>
+            </div>
+
+            <!-- Gói 1 Năm -->
+            <div class="plan-card bg-white p-6 rounded-3xl border border-blue-100 card-shadow transition-all duration-300 flex flex-col justify-between hover:-translate-y-1" data-plan="1 Năm">
+                <div>
+                    <div class="text-xs font-extrabold uppercase text-slate-400 tracking-wider mb-2">Gói Toàn Diện</div>
+                    <h3 class="text-xl font-black text-blue-950 mb-4">1 Năm (12T)</h3>
+                    <div class="text-3xl font-black text-blue-600 mb-1">299.000<span class="text-sm font-bold text-slate-500">đ</span></div>
+                    <p class="text-xs text-slate-500 mb-6 font-medium">Đồng hành trọn vẹn cả năm học.</p>
+                    <ul class="space-y-2.5 text-xs text-slate-700 font-bold border-t border-slate-100 pt-4">
+                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-blue-600 text-[18px]">check_circle</span> Toàn bộ đặc quyền VIP</li>
+                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-blue-600 text-[18px]">check_circle</span> Hỗ trợ 1-1 từ cố vấn học tập</li>
+                    </ul>
+                </div>
+                <button onclick="requestCheckout('1 Năm')" class="plan-btn mt-6 w-full py-3 rounded-xl font-extrabold text-xs text-blue-900 bg-blue-50 border border-blue-200 hover:bg-blue-600 hover:text-white transition shadow-sm">
+                    Đăng ký ngay
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- 1. POPUP XÁC NHẬN THANH TOÁN (Trắng sáng) -->
+    <div id="checkoutModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm popup-backdrop">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 text-slate-900 shadow-2xl border border-slate-200 relative popup-box">
+            <button onclick="closeModal('checkoutModal')" class="absolute top-5 right-5 text-slate-400 hover:text-blue-900 transition-transform hover:scale-110">
+                <span class="material-symbols-outlined text-[24px]">close</span>
+            </button>
+
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-3 border border-blue-100">
+                    <span class="material-symbols-outlined text-3xl">receipt_long</span>
+                </div>
+                <h3 id="checkoutTitle" class="text-2xl font-black text-blue-950">Xác Nhận Nâng Cấp</h3>
+                <p class="text-xs text-slate-500 mt-1">Vui lòng kiểm tra chi tiết thanh toán gói Primux Elite.</p>
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3 mb-6 text-xs">
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Gói đăng ký:</span>
+                    <span id="checkoutPlanName" class="font-bold text-blue-900">6 Tháng</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Giá niêm yết:</span>
+                    <span id="checkoutPlanPrice" class="font-bold text-blue-900">159.000đ</span>
+                </div>
+                <div id="checkoutDeductionRow" class="flex justify-between text-emerald-600">
+                    <span>Đã trừ gói cũ:</span>
+                    <span id="checkoutDeductionPrice">-49.000đ</span>
+                </div>
+                <div class="pt-3 border-t border-slate-200 flex justify-between items-center text-sm">
+                    <span class="font-bold text-slate-700">Số tiền thực trả:</span>
+                    <span id="checkoutFinalPrice" class="font-black text-xl text-amber-500">110.000đ</span>
+                </div>
+            </div>
+
+            <button id="btnConfirmPay" class="w-full py-3.5 px-4 rounded-xl font-black text-sm text-white bg-blue-600 hover:bg-blue-700 transition shadow-lg active:scale-95 btn-shadow">
+                Xác nhận thanh toán ngay
+            </button>
+        </div>
+    </div>
+
+    <!-- 2. POPUP THÔNG BÁO NÂNG CẤP BÙ TIỀN THÀNH CÔNG (Có hiệu ứng pháo hoa) -->
+    <div id="welcomeEliteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md popup-backdrop">
+        <canvas id="fireworksCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-10"></canvas>
+        <div class="bg-white rounded-3xl max-w-lg w-full p-8 md:p-10 text-slate-900 shadow-2xl border border-amber-300 relative z-20 popup-box text-center">
+            
+            <div class="w-20 h-20 rounded-3xl bg-amber-50 text-amber-500 flex items-center justify-center mx-auto mb-4 border border-amber-200 shadow-md">
+                <span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+            </div>
+            
+            <span id="successBadgeText" class="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-3 py-1 rounded-full border border-amber-200 inline-block mb-2">
+                NÂNG CẤP THÀNH CÔNG
+            </span>
+            
+            <h3 id="successTitleText" class="text-2xl md:text-3xl font-black text-blue-950">
+                Chào mừng tới với <span class="text-amber-500">Gói 6 Tháng!</span>
+            </h3>
+            
+            <p id="successDescText" class="text-xs text-slate-500 mt-2 font-medium">
+                Bạn đã nâng cấp thành công và bù số tiền chênh lệch. Toàn bộ đặc quyền VIP đã được kích hoạt.
+            </p>
+
+            <!-- Chi tiết bù tiền -->
+            <div class="mt-6 bg-slate-50 rounded-2xl p-4 border border-slate-100 space-y-2 text-xs text-left">
+                <div class="flex justify-between items-center text-slate-500">
+                    <span>Gói cước mới:</span>
+                    <span id="successNewPlan" class="font-bold text-blue-900">6 Tháng</span>
+                </div>
+                <div id="successOldPlanRow" class="flex justify-between items-center text-slate-500">
+                    <span>Gói cước trước đó:</span>
+                    <span id="successOldPlan" class="font-bold text-slate-700">1 Tháng</span>
+                </div>
+                <div class="flex justify-between items-center text-slate-500 pt-2 border-t border-slate-200">
+                    <span class="font-bold text-slate-700">Số tiền đã bù trừ:</span>
+                    <span id="successPaidAmount" class="font-black text-emerald-600 text-sm">110.000đ</span>
+                </div>
+            </div>
+
+            <div class="mt-6 flex gap-3">
+                <button onclick="goToDashboard()" class="flex-1 py-3.5 px-4 rounded-xl font-black text-sm text-blue-950 bg-amber-400 hover:bg-amber-500 transition shadow-lg active:scale-95 btn-shadow">
+                    Về trang chủ học ngay
+                </button>
+                <button onclick="closeModal('welcomeEliteModal')" class="py-3.5 px-4 rounded-xl font-bold text-xs text-slate-500 hover:bg-slate-100 transition">
+                    Ở lại trang này
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const overlay = document.getElementById('pageOverlay');
+            if (overlay) overlay.classList.add('hidden-overlay');
+        });
+
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href && href !== '#' && !href.startsWith('javascript')) {
+                    e.preventDefault();
+                    const overlay = document.getElementById('pageOverlay');
+                    if (overlay) overlay.classList.remove('hidden-overlay');
+                    setTimeout(() => window.location.href = href, 300);
+                }
+            });
+        });
+
+        const PLANS = { '1 Tháng': 49000, '3 Tháng': 99000, '6 Tháng': 159000, '1 Năm': 299000 };
+        let selectedPlanToBuy = null;
+        let lastPlanBeforeUpgrade = null;
+        let finalAmountPaid = 0;
+
+        function formatCurrency(amount) { return new Intl.NumberFormat('vi-VN').format(amount) + 'đ'; }
+        function getCurrentPlan() { return localStorage.getItem('primux_elite_plan') || null; }
+        function hasUser() { return !!localStorage.getItem('primux_user_name'); }
+        function openModal(id) { document.getElementById(id)?.classList.add('active'); }
+        function closeModal(id) { document.getElementById(id)?.classList.remove('active'); }
+
+        function renderPricingUI() {
+            const currentPlan = getCurrentPlan();
+            const username = localStorage.getItem('primux_user_name') || "Chưa đăng nhập";
+            document.getElementById('displayUsername').innerText = username;
+
+            const badge = document.getElementById('currentPlanBadge');
+            if (currentPlan) {
+                badge.innerText = `ĐANG DÙNG: ${currentPlan.toUpperCase()}`;
+                badge.className = "px-3.5 py-1 rounded-full bg-amber-400 text-blue-950 font-black text-xs uppercase shadow-sm";
+            } else {
+                badge.innerText = "GÓI MIỄN PHÍ";
+                badge.className = "px-3.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-xs font-black uppercase";
+            }
+
+            document.querySelectorAll('.plan-card').forEach(card => {
+                const planName = card.dataset.plan;
+                const planPrice = PLANS[planName];
+                const btn = card.querySelector('.plan-btn');
+
+                if (!hasUser()) {
+                    btn.innerText = "Vui lòng đăng nhập";
+                    btn.disabled = true;
+                    btn.className = "mt-6 w-full py-3 rounded-xl font-extrabold text-xs text-slate-400 bg-slate-100 border border-slate-200 cursor-not-allowed";
+                } else if (!currentPlan) {
+                    btn.innerText = (planName === '6 Tháng') ? "Nâng cấp ngay" : "Đăng ký ngay";
+                    btn.disabled = false;
+                    btn.className = (planName === '6 Tháng') 
+                        ? "mt-6 w-full py-3.5 rounded-xl font-black text-xs text-blue-950 bg-amber-400 hover:bg-amber-500 transition shadow-lg active:scale-95 btn-shadow plan-btn"
+                        : "mt-6 w-full py-3 rounded-xl font-extrabold text-xs text-blue-900 bg-blue-50 border border-blue-200 hover:bg-blue-600 hover:text-white transition shadow-sm btn-shadow plan-btn";
+                    card.classList.remove('opacity-40');
+                } else if (currentPlan === planName) {
+                    btn.innerHTML = `<span class="material-symbols-outlined text-[16px] align-middle">check_circle</span> Đang sử dụng`;
+                    btn.disabled = true;
+                    btn.className = "mt-6 w-full py-3 rounded-xl font-extrabold text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 cursor-not-allowed";
+                    card.classList.remove('opacity-40');
+                } else {
+                    const currentPrice = PLANS[currentPlan];
+                    if (planPrice > currentPrice) {
+                        const upgradeCost = planPrice - currentPrice;
+                        btn.innerText = `Nâng cấp (Bù ${formatCurrency(upgradeCost)})`;
+                        btn.disabled = false;
+                        btn.className = "mt-6 w-full py-3 rounded-xl font-extrabold text-xs text-blue-950 bg-amber-400 hover:bg-amber-500 transition shadow-sm btn-shadow plan-btn";
+                        card.classList.remove('opacity-40');
+                    } else {
+                        btn.innerText = "Đã vượt gói";
+                        btn.disabled = true;
+                        btn.className = "mt-6 w-full py-3 rounded-xl font-extrabold text-xs text-slate-400 bg-slate-100 border border-slate-200 cursor-not-allowed";
+                        card.classList.add('opacity-40');
+                    }
+                }
+            });
+        }
+
+        function requestCheckout(planName) {
+            if (!hasUser()) {
+                window.location.href = 'login.html';
+                return;
+            }
+            selectedPlanToBuy = planName;
+            lastPlanBeforeUpgrade = getCurrentPlan();
+            const planPrice = PLANS[planName];
+
+            document.getElementById('checkoutPlanName').innerText = planName;
+            document.getElementById('checkoutPlanPrice').innerText = formatCurrency(planPrice);
+
+            if (lastPlanBeforeUpgrade) {
+                const currentPrice = PLANS[lastPlanBeforeUpgrade];
+                finalAmountPaid = planPrice - currentPrice;
+                document.getElementById('checkoutTitle').innerText = "Nâng Cấp Gói Bù Tiền";
+                document.getElementById('checkoutDeductionRow').classList.remove('hidden');
+                document.getElementById('checkoutDeductionPrice').innerText = `-${formatCurrency(currentPrice)}`;
+                document.getElementById('checkoutFinalPrice').innerText = formatCurrency(finalAmountPaid);
+            } else {
+                finalAmountPaid = planPrice;
+                document.getElementById('checkoutTitle').innerText = "Đăng Ký Gói Elite";
+                document.getElementById('checkoutDeductionRow').classList.add('hidden');
+                document.getElementById('checkoutFinalPrice').innerText = formatCurrency(finalAmountPaid);
+            }
+            openModal('checkoutModal');
+        }
+
+        document.getElementById('btnConfirmPay').addEventListener('click', function() {
+            closeModal('checkoutModal');
+            
+            // Cập nhật trạng thái người dùng
+            localStorage.setItem('primux_is_elite', 'true');
+            localStorage.setItem('primux_elite_plan', selectedPlanToBuy);
+            
+            // Cập nhật nội dung Popup thành công
+            if (lastPlanBeforeUpgrade) {
+                document.getElementById('successBadgeText').innerText = "NÂNG CẤP BÙ TIỀN THÀNH CÔNG";
+                document.getElementById('successTitleText').innerHTML = `Đã nâng lên <span class="text-amber-500">Gói ${selectedPlanToBuy}!</span>`;
+                document.getElementById('successDescText').innerText = `Bạn đã hoàn tất thanh toán số tiền chênh lệch bù trừ và chuyển đổi thành công sang gói cao hơn.`;
+                document.getElementById('successOldPlanRow').classList.remove('hidden');
+                document.getElementById('successOldPlan').innerText = lastPlanBeforeUpgrade;
+            } else {
+                document.getElementById('successBadgeText').innerText = "KÍCH HOẠT VIP THÀNH CÔNG";
+                document.getElementById('successTitleText').innerHTML = `Chào mừng tới <span class="text-amber-500">Gói ${selectedPlanToBuy}!</span>`;
+                document.getElementById('successDescText').innerText = `Tài khoản của bạn đã được nâng cấp lên hạng thành viên VIP của Primux.`;
+                document.getElementById('successOldPlanRow').classList.add('hidden');
+            }
+
+            document.getElementById('successNewPlan').innerText = selectedPlanToBuy;
+            document.getElementById('successPaidAmount').innerText = formatCurrency(finalAmountPaid);
+
+            // Cập nhật lại giao diện danh sách gói
+            renderPricingUI();
+            
+            // Mở Popup chúc mừng kèm pháo hoa
+            openModal('welcomeEliteModal');
+            launchFireworks();
+        });
+
+        function goToDashboard() {
+            const overlay = document.getElementById('pageOverlay');
+            if (overlay) overlay.classList.remove('hidden-overlay');
+            setTimeout(() => window.location.href = 'index.html', 300);
+        }
+
+        // HIỆU ỨNG PHÁO HOA
+        let fireworksInterval = null;
+        let animationFrameId = null;
+
+        function launchFireworks() {
+            const canvas = document.getElementById('fireworksCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            let particles = [];
+            const colors = ['#fbbf24', '#f59e0b', '#38bdf8', '#34d399', '#f43f5e', '#ffffff'];
+
+            function createFirework(x, y) {
+                for (let i = 0; i < 45; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 6 + 2;
+                    particles.push({
+                        x: x, y: y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        radius: Math.random() * 3 + 2, alpha: 1, decay: Math.random() * 0.02 + 0.015
+                    });
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    const p = particles[i];
+                    p.x += p.vx; p.y += p.vy; p.vy += 0.08; p.alpha -= p.decay;
+                    if (p.alpha <= 0) { particles.splice(i, 1); continue; }
+                    ctx.save(); ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill();
+                    ctx.restore();
+                }
+                animationFrameId = requestAnimationFrame(animate);
+            }
+            animate();
+            fireworksInterval = setInterval(() => {
+                createFirework(Math.random() * (canvas.width * 0.8) + canvas.width * 0.1, Math.random() * (canvas.height * 0.5) + canvas.height * 0.1);
+            }, 300);
+        }
+
+        renderPricingUI();
+    </script>
+</body>
+</html>

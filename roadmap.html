@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lộ trình của tôi - Primux THPT</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: { colors: { "primary-deep": "#1e3a8a", "primary-main": "#2563eb", "primary-light": "#60a5fa" }, fontFamily: { sans: ["Be Vietnam Pro", "sans-serif"] } }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; background-color: #f8fbff; }
+        .card-shadow { box-shadow: 0 10px 30px -5px rgba(30, 64, 175, 0.06); }
+        .gold-glow { text-shadow: 0 4px 15px rgba(217, 119, 6, 0.4); }
+        .gold-box-shadow { box-shadow: 0 15px 35px -10px rgba(30, 58, 138, 0.2); border: 1px solid rgba(147, 197, 253, 0.5); }
+        .popup-backdrop { opacity: 0; pointer-events: none; transition: opacity 0.35s ease; }
+        .popup-backdrop.active { opacity: 1; pointer-events: auto; }
+        .popup-box { transform: scale(0.85); transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .popup-backdrop.active .popup-box { transform: scale(1); }
+        .page-transition-overlay { position: fixed; inset: 0; background-color: #1e3a8a; z-index: 9999; pointer-events: none; opacity: 1; transition: opacity 0.35s ease; }
+        .page-transition-overlay.hidden-overlay { opacity: 0; }
+    </style>
+</head>
+<body class="bg-[#f4f8ff] text-slate-900 min-h-screen flex flex-col md:flex-row antialiased">
+    <div id="pageOverlay" class="page-transition-overlay"></div>
+
+    <aside class="w-full md:w-72 bg-white border-r border-blue-100 flex flex-col justify-between shrink-0 card-shadow z-20">
+        <div>
+            <div class="p-6 border-b border-blue-50 flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black text-lg shadow-md">P</div>
+                <div><span class="text-xl font-black text-blue-950 block">PRIMUX</span><span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest block">THPT Quốc Gia · 2027</span></div>
+            </div>
+            <nav class="p-4 space-y-1.5">
+                <a href="index.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <span class="material-symbols-outlined text-[20px]">grid_view</span> <span class="text-sm">Tổng quan</span>
+                </a>
+                <a href="elite.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-blue-900 bg-amber-50 border border-amber-200 hover:bg-amber-100 font-extrabold transition-all group">
+                    <span class="material-symbols-outlined text-[20px] text-amber-500" style="font-variation-settings: 'FILL' 1;">stars</span> <span class="text-sm">Gói Primux Elite</span>
+                </a>
+                <a href="exam.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <span class="material-symbols-outlined text-[20px]">menu_book</span> <span class="text-sm">Luyện đề</span>
+                </a>
+                <a href="knowledge.html" class="nav-link flex items-center justify-between px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <div class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px]">auto_stories</span> <span class="text-sm">Kho kiến thức</span></div>
+                    <span id="sidebarKnowledgeBadge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase shadow-sm">ELITE</span>
+                </a>
+                <a href="roadmap.html" class="nav-link flex items-center justify-between px-3.5 py-3 rounded-xl bg-blue-600 text-white font-bold shadow-md transition-all">
+                    <div class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-amber-300">route</span> <span class="text-sm">Lộ trình của tôi</span></div>
+                    <span id="sidebarRoadmapBadge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase shadow-sm">ELITE</span>
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        <header class="h-20 bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-blue-100 px-8 flex items-center justify-between">
+            <div>
+                <span class="text-xs font-extrabold text-blue-600 uppercase tracking-widest">AI ROADMAP ENGINE</span>
+                <h1 class="text-2xl font-black text-blue-950">Lộ Trình Bứt Phá Mục Tiêu <span id="headerTargetScore" class="text-blue-600">29.00</span> Điểm</h1>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="openModal('addStageModal')" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">add</span> Thêm mục tiêu chặng
+                </button>
+            </div>
+        </header>
+
+        <div class="p-6 md:p-8 space-y-8 max-w-7xl w-full mx-auto">
+            <!-- Banner Mục tiêu -->
+            <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 p-8 rounded-3xl text-white gold-box-shadow flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2 text-xs font-black text-amber-300 uppercase">
+                        <span class="material-symbols-outlined text-[18px]">psychology</span>
+                        Kế hoạch cá nhân hóa theo mục tiêu
+                    </div>
+                    <h2 class="text-3xl font-black">
+                        Khoảng cách mục tiêu: <span id="scoreGapText" class="text-amber-300 gold-glow">+1.55 điểm</span>
+                    </h2>
+                    <p class="text-xs text-blue-100 max-w-xl">
+                        Hiện tại: <b id="currentScoreDisplay">27.45</b> điểm | Mục tiêu: <b id="targetScoreDisplay">29.00</b> điểm. Hệ thống tự động phân bổ các chặng ôn luyện.
+                    </p>
+                    <div>
+                        <button onclick="openModal('editTargetModal')" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-bold text-amber-300 transition shadow-sm">
+                            <span class="material-symbols-outlined text-[16px]">edit</span>
+                            Thay đổi điểm mục tiêu
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white/10 p-5 rounded-2xl border border-white/20 text-center shrink-0">
+                    <div class="text-xs text-blue-200 uppercase font-bold">Tiến độ lộ trình</div>
+                    <div id="progressPercentDisplay" class="text-4xl font-black text-amber-300 my-1">64%</div>
+                    <div class="text-[11px] text-white/80">Hoàn thành mục tiêu</div>
+                </div>
+            </div>
+
+            <!-- Danh sách chặng lộ trình -->
+            <div class="space-y-6">
+                <h3 class="text-xl font-extrabold text-blue-950">Các Chặng Mục Tiêu Học Tập</h3>
+                <div id="roadmapStagesContainer" class="space-y-4"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- POPUP THAY ĐỔI ĐIỂM SỐ MỤC TIÊU -->
+    <div id="editTargetModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm popup-backdrop">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 text-center shadow-2xl border border-blue-100 relative popup-box">
+            <button onclick="closeModal('editTargetModal')" class="absolute top-5 right-5 text-slate-400 hover:text-blue-900"><span class="material-symbols-outlined">close</span></button>
+            <h3 class="text-xl font-black text-blue-950 mb-1">Đặt Mục Tiêu Điểm Số</h3>
+            <p class="text-xs text-slate-500 mb-6">Tùy chỉnh điểm hiện tại và điểm mục tiêu của bạn.</p>
+
+            <form id="targetScoreForm" class="space-y-4 text-left text-xs">
+                <div><label class="block font-bold text-blue-900 mb-1">Điểm số hiện tại</label><input id="inputCurrentScore" type="number" step="0.05" class="w-full p-3 rounded-xl border border-slate-200 font-bold" required/></div>
+                <div><label class="block font-bold text-blue-900 mb-1">Điểm mục tiêu (THPTQG)</label><input id="inputTargetScore" type="number" step="0.05" class="w-full p-3 rounded-xl border border-slate-200 font-bold text-amber-600" required/></div>
+                <button type="submit" class="w-full py-3.5 rounded-xl font-black text-sm text-white bg-blue-600 hover:bg-blue-700 transition">Cập nhật mục tiêu</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- POPUP THÊM CHẶNG MỤC TIÊU HỌC TẬP MỚI -->
+    <div id="addStageModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm popup-backdrop">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 text-center shadow-2xl border border-blue-100 relative popup-box">
+            <button onclick="closeModal('addStageModal')" class="absolute top-5 right-5 text-slate-400 hover:text-blue-900"><span class="material-symbols-outlined">close</span></button>
+            <h3 class="text-xl font-black text-blue-950 mb-1">Thêm Mục Tiêu Chặng Học</h3>
+            <p class="text-xs text-slate-500 mb-6">Tạo thêm mốc bứt phá mới cho hành trình ôn tập.</p>
+
+            <form id="addStageForm" class="space-y-3 text-left text-xs">
+                <div><label class="block font-bold text-blue-900 mb-1">Số thứ tự chặng</label><input id="stageNum" type="text" placeholder="VD: 03" class="w-full p-2.5 rounded-xl border border-slate-200" required/></div>
+                <div><label class="block font-bold text-blue-900 mb-1">Tên mục tiêu / Chặng</label><input id="stageName" type="text" placeholder="VD: Chinh Phục Điểm 10 Toán" class="w-full p-2.5 rounded-xl border border-slate-200" required/></div>
+                <div><label class="block font-bold text-blue-900 mb-1">Khoảng điểm bứt phá</label><input id="stageRange" type="text" placeholder="VD: 28.50 → 29.50" class="w-full p-2.5 rounded-xl border border-slate-200" required/></div>
+                <div><label class="block font-bold text-blue-900 mb-1">Nhiệm vụ trọng tâm</label><input id="stageDesc" type="text" placeholder="Mô tả các dạng bài cần tập trung..." class="w-full p-2.5 rounded-xl border border-slate-200" required/></div>
+                <button type="submit" class="w-full py-3.5 rounded-xl font-black text-sm text-white bg-blue-600 hover:bg-blue-700 transition mt-2">Thêm chặng mới</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- POPUP YÊU CẦU VIP -->
+    <div id="vipRequiredModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm popup-backdrop">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 text-center shadow-2xl border border-blue-100 relative popup-box">
+            <button onclick="closeModal('vipRequiredModal')" class="absolute top-5 right-5 text-slate-400 hover:text-blue-900"><span class="material-symbols-outlined">close</span></button>
+            <div class="w-16 h-16 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto mb-4"><span class="material-symbols-outlined text-4xl">stars</span></div>
+            <h3 class="text-2xl font-black text-blue-950 mb-2">Đặc Quyền Lộ Trình VIP</h3>
+            <p class="text-sm text-slate-600 mb-6 font-medium">Bạn cần kích hoạt gói <b>Primux Elite</b> để mở khóa Lộ trình cá nhân hóa.</p>
+            <a href="elite.html" class="block w-full py-3.5 rounded-xl font-black text-sm text-blue-950 bg-amber-400 hover:bg-amber-500 transition shadow-lg">Nâng cấp Elite ngay</a>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('pageOverlay')?.classList.add('hidden-overlay');
+            if (!localStorage.getItem('primux_elite_plan')) openModal('vipRequiredModal');
+            loadScoreTarget();
+            renderUserStages();
+            renderUserInterface();
+        });
+
+        function isEliteUser() { return !!localStorage.getItem('primux_elite_plan'); }
+        function openModal(id) { document.getElementById(id)?.classList.add('active'); }
+        function closeModal(id) { document.getElementById(id)?.classList.remove('active'); }
+
+        function loadScoreTarget() {
+            const currentScore = parseFloat(localStorage.getItem('primux_score_current') || '27.45');
+            const targetScore = parseFloat(localStorage.getItem('primux_score_target') || '29.00');
+
+            document.getElementById('inputCurrentScore').value = currentScore.toFixed(2);
+            document.getElementById('inputTargetScore').value = targetScore.toFixed(2);
+            document.getElementById('currentScoreDisplay').innerText = currentScore.toFixed(2);
+            document.getElementById('targetScoreDisplay').innerText = targetScore.toFixed(2);
+            document.getElementById('headerTargetScore').innerText = targetScore.toFixed(2);
+
+            const gap = (targetScore - currentScore);
+            document.getElementById('scoreGapText').innerText = gap > 0 ? `+${gap.toFixed(2)} điểm` : `Đạt chỉ tiêu!`;
+            const percent = Math.min(100, Math.max(20, Math.round((currentScore / targetScore) * 100) - 20));
+            document.getElementById('progressPercentDisplay').innerText = `${percent}%`;
+        }
+
+        document.getElementById('targetScoreForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const curr = parseFloat(document.getElementById('inputCurrentScore').value);
+            const targ = parseFloat(document.getElementById('inputTargetScore').value);
+            localStorage.setItem('primux_score_current', curr.toString());
+            localStorage.setItem('primux_score_target', targ.toString());
+            closeModal('editTargetModal');
+            loadScoreTarget();
+            alert("Đã cập nhật mục tiêu điểm số thành công!");
+        });
+
+        document.getElementById('addStageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const num = document.getElementById('stageNum').value.trim();
+            const name = document.getElementById('stageName').value.trim();
+            const range = document.getElementById('stageRange').value.trim();
+            const desc = document.getElementById('stageDesc').value.trim();
+
+            let stages = JSON.parse(localStorage.getItem('primux_roadmap_stages') || '[]');
+            if (stages.length === 0) {
+                stages = [
+                    { num: '01', name: 'Thông Hiểu & Vận Dụng Thấp', range: '27.00 → 27.50 Điểm', desc: 'Củng cố lý thuyết mức độ Thông hiểu.' },
+                    { num: '02', name: 'Bứt Phá Trọng Tâm 8.5+', range: '27.50 → 28.50 Điểm', desc: 'Tối ưu tốc độ giải vận dụng cao.' }
+                ];
+            }
+            stages.push({ num, name, range, desc, status: 'ACTIVE' });
+            localStorage.setItem('primux_roadmap_stages', JSON.stringify(stages));
+
+            this.reset();
+            closeModal('addStageModal');
+            renderUserStages();
+            alert("Đã thêm mục tiêu chặng học mới thành công!");
+        });
+
+        function renderUserStages() {
+            let stages = JSON.parse(localStorage.getItem('primux_roadmap_stages') || '[]');
+            if (stages.length === 0) {
+                stages = [
+                    { num: '01', name: 'Thông Hiểu & Vận Dụng Thấp', range: '27.00 → 27.50 Điểm', desc: 'Củng cố lý thuyết mức độ Thông hiểu.' },
+                    { num: '02', name: 'Bứt Phá Trọng Tâm 8.5+', range: '27.50 → 28.50 Điểm', desc: 'Tối ưu tốc độ giải vận dụng cao.' }
+                ];
+                localStorage.setItem('primux_roadmap_stages', JSON.stringify(stages));
+            }
+
+            const container = document.getElementById('roadmapStagesContainer');
+            container.innerHTML = '';
+
+            stages.forEach((st, idx) => {
+                const el = document.createElement('div');
+                const isFirst = idx === 0;
+                el.className = isFirst
+                    ? "bg-white p-6 rounded-3xl border border-blue-100 card-shadow flex flex-col md:flex-row items-center justify-between gap-4"
+                    : "bg-white p-6 rounded-3xl border-2 border-blue-600 card-shadow flex flex-col md:flex-row items-center justify-between gap-4 relative";
+
+                el.innerHTML = `
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-2xl ${isFirst ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-50 text-blue-600 border border-blue-200'} flex items-center justify-center font-black text-lg shrink-0">
+                            ${isFirst ? '<span class="material-symbols-outlined">done_all</span>' : st.num}
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="px-2.5 py-0.5 rounded-full ${isFirst ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'} text-[10px] font-black uppercase">CHẶNG ${st.num}</span>
+                                <span class="text-xs font-bold text-slate-500">${st.range}</span>
+                            </div>
+                            <h4 class="text-base font-extrabold text-blue-950">${st.name}</h4>
+                            <p class="text-xs text-slate-500 mt-1">${st.desc}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button onclick="deleteStage(${idx})" class="p-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 text-xs font-bold transition" title="Xóa mục tiêu">Xóa</button>
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+        }
+
+        function deleteStage(index) {
+            let stages = JSON.parse(localStorage.getItem('primux_roadmap_stages') || '[]');
+            stages.splice(index, 1);
+            localStorage.setItem('primux_roadmap_stages', JSON.stringify(stages));
+            renderUserStages();
+        }
+
+        function renderUserInterface() {
+            const kbBadge = document.getElementById('sidebarKnowledgeBadge');
+            const rbBadge = document.getElementById('sidebarRoadmapBadge');
+            if (isEliteUser()) {
+                if (kbBadge) { kbBadge.innerText = "VIP"; kbBadge.className = "inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400 text-blue-950 text-[10px] font-black uppercase shadow-sm"; }
+                if (rbBadge) { rbBadge.innerText = "VIP"; rbBadge.className = "inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400 text-blue-950 text-[10px] font-black uppercase shadow-sm"; }
+            }
+        }
+    </script>
+</body>
+</html>

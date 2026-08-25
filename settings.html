@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cài đặt tài khoản - Primux THPT</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-deep": "#1e3a8a", "primary-main": "#2563eb", "primary-light": "#60a5fa", "primary-pale": "#dbeafe"
+                    },
+                    fontFamily: { sans: ["Be Vietnam Pro", "sans-serif"] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; background-color: #f8fbff; }
+        .card-shadow { box-shadow: 0 10px 30px -5px rgba(30, 64, 175, 0.06), 0 4px 12px -2px rgba(30, 64, 175, 0.03); }
+        .btn-shadow { box-shadow: 0 6px 15px rgba(37, 99, 235, 0.25); transition: all 0.3s ease; }
+        .btn-shadow:hover { box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35); transform: translateY(-2px); }
+        
+        .page-transition-overlay { position: fixed; inset: 0; background-color: #1e3a8a; z-index: 9999; pointer-events: none; opacity: 1; transition: opacity 0.35s ease; }
+        .page-transition-overlay.hidden-overlay { opacity: 0; }
+        .popup-backdrop { opacity: 0; pointer-events: none; transition: opacity 0.35s ease; }
+        .popup-backdrop.active { opacity: 1; pointer-events: auto; }
+        .popup-box { transform: scale(0.85); transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .popup-backdrop.active .popup-box { transform: scale(1); }
+    </style>
+</head>
+<body class="bg-[#f4f8ff] text-slate-900 min-h-screen flex flex-col md:flex-row antialiased selection:bg-blue-600 selection:text-white">
+    <div id="pageOverlay" class="page-transition-overlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="w-full md:w-72 bg-white border-r border-blue-100 flex flex-col justify-between shrink-0 card-shadow z-20">
+        <div>
+            <div class="p-6 border-b border-blue-50 flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black text-lg shadow-md">P</div>
+                <div>
+                    <span class="text-xl font-black text-blue-950 tracking-tight block">PRIMUX</span>
+                    <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest block">THPT Quốc Gia · 2027</span>
+                </div>
+            </div>
+            <nav class="p-4 space-y-1.5">
+                <div class="text-[11px] font-extrabold text-slate-400 px-3 py-2 uppercase tracking-wider">Không gian học</div>
+                <a href="index.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <span class="material-symbols-outlined text-[20px]">grid_view</span> <span class="text-sm">Tổng quan</span>
+                </a>
+                <a href="elite.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-blue-900 bg-amber-50 border border-amber-200 hover:bg-amber-100 font-extrabold transition-all group">
+                    <span class="material-symbols-outlined text-[20px] text-amber-500" style="font-variation-settings: 'FILL' 1;">stars</span>
+                    <span class="text-sm">Gói Primux Elite</span>
+                </a>
+                <a href="exam.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <span class="material-symbols-outlined text-[20px]">menu_book</span> <span class="text-sm">Luyện đề</span>
+                </a>
+                <a href="knowledge.html" class="nav-link flex items-center justify-between px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-[20px]">auto_stories</span> <span class="text-sm">Kho kiến thức</span>
+                    </div>
+                    <span id="sidebarKnowledgeBadge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase shadow-sm">ELITE</span>
+                </a>
+                <a href="analytics.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <span class="material-symbols-outlined text-[20px]">insights</span> <span class="text-sm">Phân tích</span>
+                </a>
+                <div class="text-[11px] font-extrabold text-slate-400 px-3 pt-5 pb-2 uppercase tracking-wider">Cá nhân hóa</div>
+                <a href="roadmap.html" class="nav-link flex items-center justify-between px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-[20px]">route</span> <span class="text-sm">Lộ trình của tôi</span>
+                    </div>
+                    <span id="sidebarRoadmapBadge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase shadow-sm">ELITE</span>
+                </a>
+            </nav>
+        </div>
+        <div class="p-4 space-y-2">
+            <a href="settings.html" class="nav-link flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-600 text-white text-xs font-bold shadow-md transition-all">
+                <span class="material-symbols-outlined text-[18px]">settings</span> Cài đặt tài khoản
+            </a>
+            <div class="flex items-center justify-between p-3 rounded-2xl bg-blue-50/60 border border-blue-100">
+                <div class="flex items-center gap-3">
+                    <div id="userAvatar" class="w-10 h-10 rounded-xl bg-blue-600 text-white font-extrabold flex items-center justify-center text-base shadow-sm">H</div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <span id="userSidebarName" class="text-sm font-bold text-blue-950">Nguyễn Anh Hào</span>
+                            <span id="userEliteBadgeSidebar" class="hidden text-amber-500"><span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">stars</span></span>
+                        </div>
+                        <div class="text-xs text-slate-500 font-medium">Học sinh lớp 12</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        <header class="h-20 bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-blue-100 px-8 flex items-center justify-between">
+            <div>
+                <span class="text-xs font-extrabold text-blue-600 uppercase tracking-widest">QUẢN LÝ TÀI KHOẢN</span>
+                <h1 class="text-2xl font-black text-blue-950">Cài Đặt Hồ Sơ Cá Nhân</h1>
+            </div>
+            <div id="topbarEliteAction">
+                <a href="elite.html" class="nav-link flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 text-white font-black text-xs shadow-md hover:bg-blue-700 transition">Nâng cấp Elite</a>
+            </div>
+        </header>
+
+        <div class="p-6 md:p-8 space-y-8 max-w-4xl w-full mx-auto">
+            <!-- Form thông tin cá nhân -->
+            <div class="bg-white p-8 rounded-3xl border border-blue-100 card-shadow space-y-6">
+                <h3 class="text-lg font-black text-blue-950 pb-4 border-b border-slate-100">Thông Tin Định Danh</h3>
+                <form id="settingsForm" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-blue-900 mb-1">Họ và tên</label>
+                            <input id="inputName" type="text" class="w-full py-3 px-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 text-sm font-medium focus:border-blue-500 focus:ring-blue-500" required/>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-blue-900 mb-1">Số điện thoại</label>
+                            <input id="inputPhone" type="tel" class="w-full py-3 px-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 text-sm font-medium focus:border-blue-500 focus:ring-blue-500"/>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-blue-900 mb-1">Địa chỉ Email</label>
+                        <input id="inputEmail" type="email" class="w-full py-3 px-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 text-sm font-medium focus:border-blue-500 focus:ring-blue-500"/>
+                    </div>
+                    <button type="submit" class="py-3 px-6 rounded-xl bg-blue-600 text-white font-bold text-xs shadow-md hover:bg-blue-700 transition">Lưu thay đổi</button>
+                </form>
+            </div>
+
+            <!-- Quản lý gói cước Elite & Hủy gói -->
+            <div class="bg-white p-8 rounded-3xl border border-blue-100 card-shadow space-y-6">
+                <h3 class="text-lg font-black text-blue-950 pb-4 border-b border-slate-100">Trạng Thái Gói Primux Elite</h3>
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-blue-50/50 p-5 rounded-2xl border border-blue-100">
+                    <div>
+                        <div id="currentPlanStatus" class="text-sm font-extrabold text-blue-900 mb-1">Đang sử dụng: Gói 6 Tháng Elite</div>
+                        <p class="text-xs text-slate-500">Mở khóa toàn bộ tính năng cao cấp trên nền tảng.</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <a href="elite.html" class="nav-link px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-blue-950 font-black text-xs transition shadow-sm">Thay đổi gói</a>
+                        <button onclick="requestCancelElite()" class="px-4 py-2 rounded-xl bg-red-50 text-red-600 border border-red-200 font-bold text-xs hover:bg-red-100 transition">Hủy gói</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- POPUP XÁC NHẬN HỦY GÓI (KHÔNG HOÀN TIỀN) -->
+    <div id="cancelConfirmModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm popup-backdrop">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 text-center shadow-2xl border border-blue-100 relative popup-box">
+            <button onclick="closeModal('cancelConfirmModal')" class="absolute top-5 right-5 text-slate-400 hover:text-blue-900 transition-transform hover:scale-110">
+                <span class="material-symbols-outlined text-[24px]">close</span>
+            </button>
+            <div class="w-16 h-16 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-4 border border-red-100 shadow-md">
+                <span class="material-symbols-outlined text-4xl">warning</span>
+            </div>
+            <h3 class="text-2xl font-black text-blue-950 mb-2">Cảnh báo Hủy Gói</h3>
+            <p class="text-sm text-slate-600 mb-6 font-medium leading-relaxed">
+                Bạn có chắc chắn muốn hủy gói Primux Elite? <b>Hệ thống sẽ KHÔNG hoàn tiền</b> cho khoảng thời gian chưa sử dụng còn lại theo chính sách. Toàn bộ tiến độ lộ trình VIP sẽ bị khóa.
+            </p>
+            <div class="space-y-3">
+                <button onclick="executeCancelPlan()" class="w-full py-3.5 px-4 rounded-xl font-black text-sm text-white bg-red-600 hover:bg-red-700 transition shadow-lg active:scale-95">Xác nhận hủy (Không hoàn tiền)</button>
+                <button onclick="closeModal('cancelConfirmModal')" class="w-full py-3 px-4 rounded-xl font-bold text-xs text-slate-500 hover:bg-slate-100 transition">Giữ lại gói Elite</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP THÔNG BÁO CHUNG -->
+    <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm popup-backdrop">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-8 text-center shadow-2xl relative popup-box">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4 border border-emerald-100">
+                <span class="material-symbols-outlined text-4xl">check_circle</span>
+            </div>
+            <h3 id="successModalTitle" class="text-xl font-black text-blue-950 mb-2">Thành công!</h3>
+            <button onclick="closeModal('successModal')" class="mt-4 w-full py-3 px-4 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-700 transition">Đóng</button>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('pageOverlay')?.classList.add('hidden-overlay');
+            
+            // Load user data
+            document.getElementById('inputName').value = localStorage.getItem('primux_user_name') || 'Nguyễn Anh Hào';
+            document.getElementById('inputEmail').value = localStorage.getItem('primux_user_email') || 'haonguyen@example.com';
+            document.getElementById('inputPhone').value = localStorage.getItem('primux_user_phone') || '0901234567';
+            
+            renderUserInterface();
+        });
+
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href && href !== '#' && !href.startsWith('javascript')) {
+                    e.preventDefault();
+                    document.getElementById('pageOverlay')?.classList.remove('hidden-overlay');
+                    setTimeout(() => window.location.href = href, 300);
+                }
+            });
+        });
+
+        function hasUser() { return !!localStorage.getItem('primux_user_name'); }
+        function openModal(id) { document.getElementById(id)?.classList.add('active'); }
+        function closeModal(id) { document.getElementById(id)?.classList.remove('active'); }
+
+        function renderUserInterface() {
+            const savedName = localStorage.getItem('primux_user_name') || 'Nguyễn Anh Hào';
+            document.getElementById('userSidebarName').innerText = savedName;
+            document.getElementById('userAvatar').innerText = savedName.trim().charAt(savedName.trim().length - 1).toUpperCase();
+
+            const plan = localStorage.getItem('primux_elite_plan');
+            if (plan) {
+                document.getElementById('currentPlanStatus').innerText = `Đang sử dụng: Gói ${plan} Elite`;
+                document.getElementById('currentPlanStatus').className = "text-sm font-extrabold text-blue-900 mb-1";
+            } else {
+                document.getElementById('currentPlanStatus').innerText = `Trạng thái: Chưa đăng ký gói VIP nào`;
+                document.getElementById('currentPlanStatus').className = "text-sm font-extrabold text-slate-500 mb-1";
+            }
+
+            const isElite = !!plan;
+            const knowledgeBadge = document.getElementById('sidebarKnowledgeBadge');
+            const roadmapBadge = document.getElementById('sidebarRoadmapBadge');
+            const topbarAction = document.getElementById('topbarEliteAction');
+            const sidebarEliteIcon = document.getElementById('userEliteBadgeSidebar');
+
+            if (isElite && hasUser()) {
+                if (sidebarEliteIcon) sidebarEliteIcon.classList.remove('hidden');
+                if (knowledgeBadge) {
+                    knowledgeBadge.innerText = "VIP";
+                    knowledgeBadge.className = "inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400 text-blue-950 text-[10px] font-black uppercase shadow-sm";
+                }
+                if (roadmapBadge) {
+                    roadmapBadge.innerText = "VIP";
+                    roadmapBadge.className = "inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400 text-blue-950 text-[10px] font-black uppercase shadow-sm";
+                }
+                if (topbarAction) {
+                    topbarAction.innerHTML = `<a href="elite.html" class="nav-link flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-100 border border-amber-300 text-blue-950 font-black text-xs shadow-sm hover:bg-amber-200 transition"><span class="material-symbols-outlined text-amber-600 text-[16px]" style="font-variation-settings: 'FILL' 1;">stars</span>Primux Elite</a>`;
+                }
+            } else {
+                if (sidebarEliteIcon) sidebarEliteIcon.classList.add('hidden');
+                if (knowledgeBadge) {
+                    knowledgeBadge.innerText = "ELITE";
+                    knowledgeBadge.className = "inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase shadow-sm";
+                }
+                if (roadmapBadge) {
+                    roadmapBadge.innerText = "ELITE";
+                    roadmapBadge.className = "inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase shadow-sm";
+                }
+                if (topbarAction) {
+                    topbarAction.innerHTML = `<a href="elite.html" class="nav-link flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 text-white font-black text-xs shadow-md hover:bg-blue-700 transition">Nâng cấp Elite</a>`;
+                }
+            }
+        }
+
+        document.getElementById('settingsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            localStorage.setItem('primux_user_name', document.getElementById('inputName').value.trim());
+            localStorage.setItem('primux_user_email', document.getElementById('inputEmail').value.trim());
+            localStorage.setItem('primux_user_phone', document.getElementById('inputPhone').value.trim());
+            renderUserInterface();
+            document.getElementById('successModalTitle').innerText = "Cập nhật thành công!";
+            openModal('successModal');
+        });
+
+        function requestCancelElite() {
+            if (!localStorage.getItem('primux_elite_plan')) {
+                document.getElementById('successModalTitle').innerText = "Bạn chưa có gói VIP nào!";
+                openModal('successModal');
+                return;
+            }
+            openModal('cancelConfirmModal');
+        }
+
+        function executeCancelPlan() {
+            localStorage.removeItem('primux_is_elite');
+            localStorage.removeItem('primux_elite_plan');
+            closeModal('cancelConfirmModal');
+            renderUserInterface();
+            document.getElementById('successModalTitle').innerText = "Đã hủy gói thành công!";
+            openModal('successModal');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Primux THPT</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-deep": "#1e3a8a", "primary-main": "#2563eb", "primary-light": "#60a5fa",
+                        "primary-pale": "#dbeafe", "gold-dark": "#d97706", "gold-light": "#fef3c7"
+                    },
+                    fontFamily: { sans: ["Be Vietnam Pro", "sans-serif"] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; background-color: #f8fbff; }
+        .card-shadow { box-shadow: 0 20px 40px -15px rgba(30, 58, 138, 0.15); }
+        .page-transition-overlay { position: fixed; inset: 0; background-color: #1e3a8a; z-index: 9999; pointer-events: none; opacity: 1; transition: opacity 0.35s ease; }
+        .page-transition-overlay.hidden-overlay { opacity: 0; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+        .shake-box { animation: shake 0.35s ease-in-out; }
+    </style>
+</head>
+<body class="bg-[#f4f8ff] text-slate-900 min-h-screen flex items-center justify-center p-6 relative">
+    <div id="pageOverlay" class="page-transition-overlay"></div>
+
+    <div class="w-full max-w-md bg-white p-8 md:p-10 rounded-3xl border border-blue-100 card-shadow text-center relative z-10">
+        <div class="w-16 h-16 rounded-2xl bg-blue-900 text-white flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <span class="material-symbols-outlined text-3xl">admin_panel_settings</span>
+        </div>
+        <span class="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-3 py-1 rounded-full border border-amber-200">QUẢN TRỊ VIÊN</span>
+        <h1 class="text-2xl font-black text-blue-950 mt-2 mb-1">Đăng Nhập Quản Trị</h1>
+        <p class="text-xs text-slate-500 mb-6 font-medium">Truy cập bảng điều khiển hệ thống Primux THPT</p>
+
+        <div id="loginAlert" class="hidden mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-xs font-bold rounded-xl text-left flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">error</span>
+            <span id="alertMsg">Tài khoản quản trị không chính xác!</span>
+        </div>
+
+        <form id="adminLoginForm" class="space-y-4 text-left text-xs" novalidate>
+            <div>
+                <label class="block font-bold text-blue-900 mb-1">Tài khoản quản trị</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400"><span class="material-symbols-outlined text-[18px]">person</span></span>
+                    <input type="text" id="adminUser" placeholder="admin" value="admin" class="w-full pl-10 pr-3 py-3 rounded-xl border border-slate-200 text-sm font-medium focus:ring-blue-500 focus:border-blue-500"/>
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-bold text-blue-900 mb-1">Mật khẩu bảo mật</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400"><span class="material-symbols-outlined text-[18px]">lock</span></span>
+                    <input type="password" id="adminPass" placeholder="••••••••" value="admin123" class="w-full pl-10 pr-3 py-3 rounded-xl border border-slate-200 text-sm font-medium focus:ring-blue-500 focus:border-blue-500"/>
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <button type="submit" id="btnSubmit" class="w-full py-3.5 px-4 rounded-xl font-black text-sm text-white bg-blue-900 hover:bg-blue-950 transition shadow-lg active:scale-95 flex items-center justify-center gap-2">
+                    <span>Xác thực & Vào Dashboard</span>
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </button>
+            </div>
+        </form>
+
+        <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium">
+            <a href="index.html" class="hover:text-blue-600 transition flex items-center gap-1">
+                <span class="material-symbols-outlined text-[16px]">arrow_back</span> Về trang chủ
+            </a>
+            <span>PRIMUX ADMIN SECURE</span>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('pageOverlay')?.classList.add('hidden-overlay');
+        });
+
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const u = document.getElementById('adminUser').value.trim();
+            const p = document.getElementById('adminPass').value.trim();
+            const alertBox = document.getElementById('loginAlert');
+            const formBox = document.querySelector('.card-shadow');
+
+            // Tài khoản Admin mặc định: admin / admin123
+            if (u === 'admin' && p === 'admin123') {
+                alertBox.classList.add('hidden');
+                localStorage.setItem('primux_admin_token', 'AUTH_TOKEN_' + Date.now());
+                document.getElementById('pageOverlay')?.classList.remove('hidden-overlay');
+                setTimeout(() => window.location.href = 'admin.html', 300);
+            } else {
+                alertBox.classList.remove('hidden');
+                formBox.classList.add('shake-box');
+                setTimeout(() => formBox.classList.remove('shake-box'), 400);
+            }
+        });
+    </script>
+</body>
+</html>

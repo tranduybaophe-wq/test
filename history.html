@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch sử làm bài - Primux THPT</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { "primary-deep": "#1e3a8a", "primary-main": "#2563eb", "primary-light": "#60a5fa" }, fontFamily: { sans: ["Be Vietnam Pro", "sans-serif"] } } } }
+    </script>
+    <style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; background-color: #f8fbff; }
+        .card-shadow { box-shadow: 0 10px 30px -5px rgba(30, 64, 175, 0.06); }
+        .page-transition-overlay { position: fixed; inset: 0; background-color: #1e3a8a; z-index: 9999; pointer-events: none; opacity: 1; transition: opacity 0.35s ease; }
+        .page-transition-overlay.hidden-overlay { opacity: 0; }
+    </style>
+</head>
+<body class="bg-[#f4f8ff] text-slate-900 min-h-screen flex flex-col md:flex-row antialiased">
+    <div id="pageOverlay" class="page-transition-overlay"></div>
+
+    <aside class="w-full md:w-72 bg-white border-r border-blue-100 flex flex-col justify-between shrink-0 card-shadow z-20">
+        <div>
+            <div class="p-6 border-b border-blue-50 flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black text-lg shadow-md">P</div>
+                <div><span class="text-xl font-black text-blue-950 block">PRIMUX</span><span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest block">THPT Quốc Gia · 2027</span></div>
+            </div>
+            <nav class="p-4 space-y-1.5">
+                <div class="text-[11px] font-extrabold text-slate-400 px-3 py-2 uppercase tracking-wider">Không gian học</div>
+                <a href="index.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <span class="material-symbols-outlined text-[20px]">grid_view</span> <span class="text-sm">Tổng quan</span>
+                </a>
+                <a href="exam.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 font-semibold transition-all">
+                    <span class="material-symbols-outlined text-[20px]">menu_book</span> <span class="text-sm">Luyện đề</span>
+                </a>
+                <a href="history.html" class="nav-link flex items-center gap-3 px-3.5 py-3 rounded-xl bg-blue-600 text-white font-bold shadow-md transition-all">
+                    <span class="material-symbols-outlined text-[20px] text-amber-300">history</span> <span class="text-sm">Lịch sử làm bài</span>
+                </a>
+            </nav>
+        </div>
+        <div class="p-4">
+            <a href="settings.html" class="nav-link flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-blue-900 hover:bg-blue-50 text-xs font-bold transition-all">
+                <span class="material-symbols-outlined text-[18px]">settings</span> Cài đặt tài khoản
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        <header class="h-20 bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-blue-100 px-8 flex items-center justify-between">
+            <div>
+                <span class="text-xs font-extrabold text-blue-600 uppercase tracking-widest">TIẾN ĐỘ CÁ NHÂN</span>
+                <h1 class="text-2xl font-black text-blue-950">Lịch Sử Luyện Đề Của <span id="headerAccountName" class="text-blue-600">Bạn</span></h1>
+            </div>
+        </header>
+
+        <div class="p-6 md:p-8 space-y-6 max-w-5xl w-full mx-auto" id="historyListContainer">
+            <!-- Danh sách lịch sử sẽ render ở đây -->
+        </div>
+    </main>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('pageOverlay')?.classList.add('hidden-overlay');
+            
+            const username = localStorage.getItem('primux_user_name') || 'Học Sinh';
+            document.getElementById('headerAccountName').innerText = username.split(' ').pop(); // Lấy tên cuối
+
+            loadHistoryData();
+        });
+
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href && href !== '#' && !href.startsWith('javascript')) {
+                    e.preventDefault();
+                    document.getElementById('pageOverlay')?.classList.remove('hidden-overlay');
+                    setTimeout(() => window.location.href = href, 300);
+                }
+            });
+        });
+
+        function loadHistoryData() {
+            const container = document.getElementById('historyListContainer');
+            const history = JSON.parse(localStorage.getItem('primux_exam_history') || '[]');
+
+            if (history.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white p-10 rounded-3xl border border-blue-100 card-shadow text-center">
+                        <div class="w-20 h-20 bg-slate-50 text-slate-300 rounded-full flex items-center justify-center mx-auto mb-4"><span class="material-symbols-outlined text-4xl">history_toggle_off</span></div>
+                        <h3 class="text-xl font-black text-blue-950 mb-2">Chưa có dữ liệu thi</h3>
+                        <p class="text-sm text-slate-500 mb-6">Bạn chưa hoàn thành bất kỳ bài thi nào. Hãy vào kho luyện đề để bắt đầu làm bài nhé!</p>
+                        <a href="exam.html" class="inline-block py-3 px-6 rounded-xl bg-blue-600 text-white font-bold text-sm shadow-md">Đến kho luyện đề</a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+            history.forEach(item => {
+                const scoreNum = parseFloat(item.score);
+                const scoreColor = scoreNum >= 8 ? 'text-emerald-600' : (scoreNum >= 5 ? 'text-amber-500' : 'text-red-500');
+                const badgeColor = scoreNum >= 8 ? 'bg-emerald-50 border-emerald-200' : (scoreNum >= 5 ? 'bg-amber-50 border-amber-200' : 'bg-red-50 border-red-200');
+
+                const el = document.createElement('div');
+                el.className = "bg-white p-6 rounded-3xl border border-blue-100 card-shadow flex flex-col md:flex-row md:items-center justify-between gap-6 hover:-translate-y-1 transition-all";
+                el.innerHTML = `
+                    <div class="flex items-center gap-5">
+                        <div class="w-16 h-16 rounded-2xl ${badgeColor} border flex flex-col items-center justify-center shrink-0">
+                            <span class="text-xl font-black ${scoreColor}">${item.score}</span>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-slate-400 mb-1 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">calendar_today</span> ${item.date}</div>
+                            <h3 class="text-base font-black text-blue-950">${item.title}</h3>
+                            <div class="text-xs font-bold text-slate-500 mt-1">Đúng <span class="text-blue-600">${item.correct}</span> câu hỏi</div>
+                        </div>
+                    </div>
+                    <button onclick="alert('Tính năng xem lại chi tiết bài làm cũ sẽ được cập nhật trong phiên bản tiếp theo.')" class="px-5 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 font-bold text-xs shrink-0 transition">Xem lại chi tiết</button>
+                `;
+                container.appendChild(el);
+            });
+        }
+    </script>
+</body>
+</html>
